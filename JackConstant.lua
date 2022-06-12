@@ -1,12 +1,12 @@
 -- Jack compiler constants
 
  --Token types
- T_KEYWORD       = 0     --# keyword e.g. 'class', 'false' etc
- T_SYM           = 1     --# symbol e.g. '{', '}' etc
- T_NUM           = 2     --# number e.g. '123' - from 0 to 32767
- T_STR           = 3     --# string e.g. "hello"
- T_ID            = 4     --# identifier e.g. 'name', 'id_42'
- T_ERROR         = 5     --# error in file
+ T_KEYWORD       = 1     --# keyword e.g. 'class', 'false' etc
+ T_SYM           = 2     --# symbol e.g. '{', '}' etc
+ T_NUM           = 3     --# number e.g. '123' - from 0 to 32767
+ T_STR           = 4     --# string e.g. "hello"
+ T_ID            = 5     --# identifier e.g. 'name', 'id_42'
+ T_ERROR         = 6     --# error in file
  
  -- Keywords for token type T_KEYWORD
  KW_CLASS        = 'class'
@@ -32,12 +32,12 @@
  KW_THIS         = 'this'
  KW_NONE         = ''
  
- keywords = [KW_CLASS, KW_METHOD, KW_FUNCTION, KW_CONSTRUCTOR, KW_INT, KW_BOOLEAN,
+ keywords = {KW_CLASS, KW_METHOD, KW_FUNCTION, KW_CONSTRUCTOR, KW_INT, KW_BOOLEAN,
              KW_CHAR, KW_VOID, KW_VAR, KW_STATIC, KW_FIELD, KW_LET, KW_DO, KW_IF,
-             KW_ELSE, KW_WHILE, KW_RETURN, KW_TRUE, KW_FALSE, KW_NULL, KW_THIS]
+             KW_ELSE, KW_WHILE, KW_RETURN, KW_TRUE, KW_FALSE, KW_NULL, KW_THIS}
  
- # Tokens for sample output
- tokens = ['keyword', 'symbol', 'integerConstant', 'stringConstant', 'identifier']
+ -- Tokens for sample output
+ tokenType = {'keyword', 'symbol', 'integerConstant', 'stringConstant', 'identifier'}
  
- # Symbols for token type T_SYM
- symbols = '{}()[].,;+-*/&|<>=~'
+ -- Symbols for token type T_SYM
+ symbols = { "{","}","(",")","[","]",".",",",";","+","-","*","/","&","|","<",">","=","~"}

@@ -1,1 +1,1 @@
-print("hello world")
+io.open("d.txt",'r')
