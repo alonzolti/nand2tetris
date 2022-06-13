@@ -1,23 +1,23 @@
-function Ballnew 0
+function Ball.new 0
 push constant 0
 call Memory.alloc 1
 pop pointer 0
-push  
-pop  
-push  
-pop  
-push  
-pop  
-push  
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push argument 2
+pop this 10
+push argument 3
 push constant 6
 sub  
-pop  
-push  
-pop  
-push  
+pop this 11
+push argument 4
+pop this 12
+push argument 5
 push constant 6
 sub  
-pop  
+pop this 13
 push constant 0
 pop this 14
 push pointer 0
@@ -25,7 +25,7 @@ call Ball.show 1
 pop temp 0
 push pointer 0
 return  
-function Balldispose 0
+function Ball.dispose 0
 push pointer 0
 pop pointer 0
 push pointer 0
@@ -33,7 +33,7 @@ call Memory.deAlloc 1
 pop temp 0
 push constant 0
 return  
-function Ballshow 0
+function Ball.show 0
 push pointer 0
 pop pointer 0
 push constant 1
@@ -45,7 +45,7 @@ call Ball.draw 1
 pop temp 0
 push constant 0
 return  
-function Ballhide 0
+function Ball.hide 0
 push pointer 0
 pop pointer 0
 push constant 0
@@ -56,7 +56,7 @@ call Ball.draw 1
 pop temp 0
 push constant 0
 return  
-function Balldraw 0
+function Ball.draw 0
 push pointer 0
 pop pointer 0
 push this 0
@@ -71,86 +71,86 @@ call Screen.drawRectangle 4
 pop temp 0
 push constant 0
 return  
-function BallgetLeft 0
+function Ball.getLeft 0
 push pointer 0
 pop pointer 0
 push this 0
 return  
-function BallgetRight 0
+function Ball.getRight 0
 push pointer 0
 pop pointer 0
 push this 0
 push constant 5
 add  
 return  
-function BallsetDestination 0
+function Ball.setDestination 0
 push pointer 0
 pop pointer 0
-push  
+push argument 1
 push this 0
 sub  
-pop this 0
-push  
+pop this 2
+push argument 2
 push this 1
 sub  
-pop this 1
+pop this 3
 push this 2
 call Math.abs 1
-pop this 2
+pop local 0
 push this 3
 call Math.abs 1
-pop this 3
-push  
-push  
+pop local 1
+push local 0
+push local 1
 lt  
-pop  
+pop this 7
 push this 7
 not  
 if-goto label2 
-push  
-pop  
-push  
-pop  
-push  
-pop  
+push local 0
+pop local 2
+push local 1
+pop local 0
+push local 2
+pop local 1
 push this 1
-push  
+push argument 2
 lt  
-pop  
+pop this 8
 push this 0
-push  
+push argument 1
 lt  
-pop  
+pop this 9
 goto label1 
 label label2 
 push this 0
-push  
+push argument 1
 lt  
-pop  
+pop this 8
 push this 1
-push  
+push argument 2
 lt  
-pop  
+pop this 9
 label label1 
 push constant 2
-push  
+push local 1
 call Math.multiply 2  
-push  
+push local 0
 sub  
-pop  
+pop this 4
 push constant 2
-push  
+push local 1
 call Math.multiply 2  
-pop  
+pop this 5
 push constant 2
-push  
-push  
+push local 1
+push local 0
 sub  
-sub  
-pop  
+call Math.multiply 2  
+pop this 6
 push constant 0
 return  
-function Ballmove 0
+function Ball.move 0
 push pointer 0
 pop pointer 0
 push pointer 0
@@ -164,13 +164,13 @@ if-goto label4
 push this 4
 push this 5
 add  
-pop this 5
+pop this 4
 goto label3 
 label label4 
 push this 4
 push this 6
 add  
-pop this 6
+pop this 4
 push this 9
 not  
 if-goto label6 
@@ -249,7 +249,7 @@ if-goto label18
 push constant 1
 pop this 14
 push this 10
-pop this 10
+pop this 0
 goto label17 
 label label18 
 label label17 
@@ -262,7 +262,7 @@ if-goto label20
 push constant 2
 pop this 14
 push this 11
-pop this 11
+pop this 0
 goto label19 
 label label20 
 label label19 
@@ -275,7 +275,7 @@ if-goto label22
 push constant 3
 pop this 14
 push this 12
-pop this 12
+pop this 1
 goto label21 
 label label22 
 label label21 
@@ -288,7 +288,7 @@ if-goto label24
 push constant 4
 pop this 14
 push this 13
-pop this 13
+pop this 1
 goto label23 
 label label24 
 label label23 
@@ -297,51 +297,51 @@ call Ball.show 1
 pop temp 0
 push this 14
 return  
-function Ballbounce 0
+function Ball.bounce 0
 push pointer 0
 pop pointer 0
 push this 2
 push constant 10
 call Math.divide 2  
-pop this 2
+pop local 2
 push this 3
 push constant 10
 call Math.divide 2  
-pop this 3
-push  
+pop local 3
+push argument 1
 push constant 0
 eq  
 not  
 if-goto label26 
 push constant 10
-pop  
+pop local 4
 goto label25 
 label label26 
 push this 2
 push constant 0
 lt  
 not  
-push  
+push argument 1
 push constant 1
 eq  
-eq  
+and  
 push this 2
 push constant 0
 lt  
-push  
+push argument 1
 push constant 1
 neg  
 eq  
-eq  
-eq  
+and  
+or  
 not  
 if-goto label28 
 push constant 20
-pop  
+pop local 4
 goto label27 
 label label28 
 push constant 5
-pop  
+pop local 4
 label label27 
 label label27 
 push this 14
@@ -350,20 +350,20 @@ eq
 not  
 if-goto label30 
 push constant 506
-pop  
-push  
+pop local 0
+push local 3
 push constant 50
 neg  
 call Math.multiply 2  
-push  
+push local 2
 call Math.divide 2  
-pop  
+pop local 1
 push this 1
-push  
-push  
+push local 1
+push local 4
 call Math.multiply 2  
-call Math.multiply 2  
-pop  
+add  
+pop local 1
 goto label29 
 label label30 
 push this 14
@@ -372,19 +372,19 @@ eq
 not  
 if-goto label32 
 push constant 0
-pop  
-push  
+pop local 0
+push local 3
 push constant 50
 call Math.multiply 2  
-push  
+push local 2
 call Math.divide 2  
-pop  
+pop local 1
 push this 1
-push  
-push  
+push local 1
+push local 4
 call Math.multiply 2  
-call Math.multiply 2  
-pop  
+add  
+pop local 1
 goto label31 
 label label32 
 push this 14
@@ -393,42 +393,42 @@ eq
 not  
 if-goto label34 
 push constant 250
-pop  
-push  
+pop local 1
+push local 2
 push constant 25
 neg  
 call Math.multiply 2  
-push  
+push local 3
 call Math.divide 2  
-pop  
+pop local 0
 push this 0
-push  
-push  
+push local 0
+push local 4
 call Math.multiply 2  
-call Math.multiply 2  
-pop  
+add  
+pop local 0
 goto label33 
 label label34 
 push constant 0
-pop  
-push  
+pop local 1
+push local 2
 push constant 25
 call Math.multiply 2  
-push  
+push local 3
 call Math.divide 2  
-pop  
+pop local 0
 push this 0
-push  
-push  
+push local 0
+push local 4
 call Math.multiply 2  
-call Math.multiply 2  
-pop  
+add  
+pop local 0
 label label33 
 label label33 
 label label33 
 push pointer 0
-push  
-push  
+push local 0
+push local 1
 call Ball.setDestination 3
 pop temp 0
 push constant 0

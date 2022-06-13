@@ -1,15 +1,15 @@
-function Batnew 0
+function Bat.new 0
 push constant 0
 call Memory.alloc 1
 pop pointer 0
-push  
-pop  
-push  
-pop  
-push  
-pop  
-push  
-pop  
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push argument 2
+pop this 2
+push argument 3
+pop this 3
 push constant 2
 pop this 4
 push pointer 0
@@ -17,7 +17,7 @@ call Bat.show 1
 pop temp 0
 push pointer 0
 return  
-function Batdispose 0
+function Bat.dispose 0
 push pointer 0
 pop pointer 0
 push pointer 0
@@ -25,7 +25,7 @@ call Memory.deAlloc 1
 pop temp 0
 push constant 0
 return  
-function Batshow 0
+function Bat.show 0
 push pointer 0
 pop pointer 0
 push constant 1
@@ -37,7 +37,7 @@ call Bat.draw 1
 pop temp 0
 push constant 0
 return  
-function Bathide 0
+function Bat.hide 0
 push pointer 0
 pop pointer 0
 push constant 0
@@ -48,7 +48,7 @@ call Bat.draw 1
 pop temp 0
 push constant 0
 return  
-function Batdraw 0
+function Bat.draw 0
 push pointer 0
 pop pointer 0
 push this 0
@@ -63,39 +63,39 @@ call Screen.drawRectangle 4
 pop temp 0
 push constant 0
 return  
-function BatsetDirection 0
+function Bat.setDirection 0
 push pointer 0
 pop pointer 0
-push  
-pop  
+push argument 1
+pop this 4
 push constant 0
 return  
-function BatgetLeft 0
+function Bat.getLeft 0
 push pointer 0
 pop pointer 0
 push this 0
 return  
-function BatgetRight 0
+function Bat.getRight 0
 push pointer 0
 pop pointer 0
 push this 0
 push this 2
 add  
 return  
-function BatsetWidth 0
+function Bat.setWidth 0
 push pointer 0
 pop pointer 0
 push pointer 0
 call Bat.hide 1
 pop temp 0
-push  
-pop  
+push argument 1
+pop this 2
 push pointer 0
 call Bat.show 1
 pop temp 0
 push constant 0
 return  
-function Batmove 0
+function Bat.move 0
 push pointer 0
 pop pointer 0
 push this 4
@@ -166,7 +166,7 @@ if-goto label6
 push constant 511
 push this 2
 sub  
-pop this 2
+pop this 0
 goto label5 
 label label6 
 label label5 

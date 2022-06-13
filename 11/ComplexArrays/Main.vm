@@ -1,14 +1,14 @@
-function Mainmain 0
+function Main.main 0
 push constant 10
 call Array.new 1
-pop  
+pop local 0
 push constant 5
 call Array.new 1
-pop  
+pop local 1
 push constant 1
 call Array.new 1
-pop  
-push  
+pop local 2
+push local 0
 push constant 3
 add  
 push constant 2
@@ -16,7 +16,7 @@ pop temp 1
 pop pointer 1
 push temp 1
 pop that 0
-push  
+push local 0
 push constant 4
 add  
 push constant 8
@@ -24,7 +24,7 @@ pop temp 1
 pop pointer 1
 push temp 1
 pop that 0
-push  
+push local 0
 push constant 5
 add  
 push constant 4
@@ -32,14 +32,14 @@ pop temp 1
 pop pointer 1
 push temp 1
 pop that 0
-push  
-push  
+push local 1
+push local 0
 push constant 3
 add  
 pop pointer 1
 push that 0
 add  
-push  
+push local 0
 push constant 3
 add  
 pop pointer 1
@@ -50,9 +50,9 @@ pop temp 1
 pop pointer 1
 push temp 1
 pop that 0
-push  
-push  
-push  
+push local 0
+push local 1
+push local 0
 push constant 3
 add  
 pop pointer 1
@@ -61,8 +61,8 @@ add
 pop pointer 1
 push that 0
 add  
-push  
-push  
+push local 0
+push local 0
 push constant 5
 add  
 pop pointer 1
@@ -70,9 +70,9 @@ push that 0
 add  
 pop pointer 1
 push that 0
-push  
+push local 1
 push constant 7
-push  
+push local 0
 push constant 3
 add  
 pop pointer 1

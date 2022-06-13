@@ -71,12 +71,7 @@ vmUnaryCmds = {}
 vmUnaryCmds["-"] = "neg"
 vmUnaryCmds["~"] = "not"
 
-segments = {}
-segments[SK_STATIC] = "static"
-segments[SK_FIELD] = "this"
-segments[SK_ARG] = "argument"
-segments[SK_VAR] = "local"
---segments[None] = "ERROR"
+segments = {"static","this","argument","local","ERROR"}
 
 -- Temporary registers
 TEMP_RETURN = 0 -- Use temp 0 for popping an unused return value

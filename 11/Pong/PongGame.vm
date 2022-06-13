@@ -1,4 +1,4 @@
-function PongGamenew 0
+function PongGame.new 0
 push constant 0
 call Memory.alloc 1
 pop pointer 0
@@ -11,7 +11,7 @@ push constant 229
 push this 6
 push constant 7
 call Bat.new 4
-pop this 6
+pop this 0
 push constant 253
 push constant 222
 push constant 0
@@ -19,7 +19,7 @@ push constant 511
 push constant 0
 push constant 229
 call Ball.new 6
-pop  
+pop this 1
 push this 1
 push constant 400
 push constant 0
@@ -65,7 +65,7 @@ push constant 0
 pop this 5
 push pointer 0
 return  
-function PongGamedispose 0
+function PongGame.dispose 0
 push pointer 0
 pop pointer 0
 push this 0
@@ -79,15 +79,15 @@ call Memory.deAlloc 1
 pop temp 0
 push constant 0
 return  
-function PongGamenewInstance 0
+function PongGame.newInstance 0
 call PongGame.new 0
-pop  
+pop static 0
 push constant 0
 return  
-function PongGamegetInstance 0
+function PongGame.getInstance 0
 push static 0
 return  
-function PongGamerun 0
+function PongGame.run 0
 push pointer 0
 pop pointer 0
 label label1 
@@ -96,7 +96,7 @@ not
 not  
 if-goto label2 
 label label3 
-push  
+push local 0
 push constant 0
 eq  
 push this 3
@@ -105,7 +105,7 @@ and
 not  
 if-goto label4 
 call Keyboard.keyPressed 0
-pop  
+pop local 0
 push this 0
 call 5.move 1
 pop temp 0
@@ -117,7 +117,7 @@ call Sys.wait 1
 pop temp 0
 goto label3 
 label label4 
-push  
+push local 0
 push constant 130
 eq  
 not  
@@ -128,7 +128,7 @@ call 5.setDirection 2
 pop temp 0
 goto label5 
 label label6 
-push  
+push local 0
 push constant 132
 eq  
 not  
@@ -139,7 +139,7 @@ call 5.setDirection 2
 pop temp 0
 goto label7 
 label label8 
-push  
+push local 0
 push constant 140
 eq  
 not  
@@ -153,7 +153,7 @@ label label9
 label label9 
 label label9 
 label label11 
-push  
+push local 0
 push constant 0
 eq  
 not  
@@ -163,7 +163,7 @@ and
 not  
 if-goto label12 
 call Keyboard.keyPressed 0
-pop  
+pop local 0
 push this 0
 call 5.move 1
 pop temp 0
@@ -211,12 +211,12 @@ label label14
 label label13 
 push constant 0
 return  
-function PongGamemoveBall 0
+function PongGame.moveBall 0
 push pointer 0
 pop pointer 0
 push this 1
 call 5.move 1
-pop this 1
+pop this 2
 push this 2
 push constant 0
 gt  
@@ -224,63 +224,63 @@ push this 2
 push this 5
 eq  
 not  
-eq  
+and  
 not  
 if-goto label16 
 push this 2
-pop this 2
+pop this 5
 push constant 0
-pop  
+pop local 0
 push this 0
 call 5.getLeft 1
-pop this 0
+pop local 1
 push this 0
 call 5.getRight 1
-pop this 0
+pop local 2
 push this 1
 call 5.getLeft 1
-pop this 1
+pop local 3
 push this 1
 call 5.getRight 1
-pop this 1
+pop local 4
 push this 2
 push constant 4
 eq  
 not  
 if-goto label18 
-push  
-push  
+push local 1
+push local 4
 gt  
-push  
-push  
+push local 2
+push local 3
 lt  
-lt  
-pop  
+or  
+pop this 3
 push this 3
 not  
 not  
 if-goto label20 
-push  
-push  
+push local 4
+push local 1
 push constant 10
 add  
-add  
+lt  
 not  
 if-goto label22 
 push constant 1
 neg  
-pop  
+pop local 0
 goto label21 
 label label22 
-push  
-push  
+push local 3
+push local 2
 push constant 10
 sub  
-sub  
+gt  
 not  
 if-goto label24 
 push constant 1
-pop  
+pop local 0
 goto label23 
 label label24 
 label label23 
@@ -311,7 +311,7 @@ goto label17
 label label24 
 label label23 
 push this 1
-push  
+push local 0
 call 5.bounce 2
 pop temp 0
 goto label15 

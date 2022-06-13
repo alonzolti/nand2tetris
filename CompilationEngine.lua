@@ -2,18 +2,13 @@ require "JackTokenizer"
 require "JackConstant"
 require "SymbolTable"
 require "VMWriter"
-CompilationEngine = {
-    tokenizer, outfile, parsedRules, vm, symbols, curClass, curSubroutine,
-    labelNum
-}
+CompilationEngine = {tokenizer, vm, symbols, curClass, curSubroutine, labelNum}
 
 function CompilationEngine:new(file)
     local t = {}
     setmetatable(t, CompilationEngine)
     self.__index = self
     t.tokenizer = JackTokenizer:new(file)
-    t.outfile = nil;
-    t.parsedRules = {}
     t.labelNum = 0
     t.symbols = SymbolTable:new()
     t.vm = VMWriter:new()
@@ -24,17 +19,17 @@ function CompilationEngine:new(file)
 end
 
 function CompilationEngine:vmFunctionName()
-    return self.curClass .. self.curSubroutine
+    return self.curClass ..'.'.. self.curSubroutine
 end
 
 function CompilationEngine:vmPushVariable(name)
-    type, kind, index = self.symbols:lookup(name)
-    self.vm:writePush(segments[kind], index)
+    t = self.symbols:lookup(name)
+    self.vm:writePush(segments[t[2]], t[3])
 end
 
 function CompilationEngine:vmPopVariable(name)
-    type, kind, index = self.symbols:lookup(name)
-    self.vm:writePop(segments[kind], index)
+    t = self.symbols:lookup(name)
+    self.vm:writePop(segments[t[2]], t[3])
 end
 
 function CompilationEngine:require(tok, val)
@@ -50,7 +45,7 @@ function CompilationEngine:advance() return self.tokenizer:advance() end
 
 function CompilationEngine:isToken(tok, val)
     nextTok, nextVal = self.tokenizer:peek()
-    return val == nil and nextTok == tok or tok == nextTok and val == nextVal
+    return (val == nil and nextTok == tok) or (tok == nextTok and val == nextVal)
 end
 
 function CompilationEngine:openOut(file) self.vm:openOut(file) end
@@ -67,11 +62,8 @@ end
 
 function CompilationEngine:isSym(symbo)
     curTok, curVal = self.tokenizer:peek()
-
     for c in symbo:gmatch(".") do
-        if c == curVal and curTok == T_SYM then
-            return true
-        end
+        if c == curVal and curTok == T_SYM then return true end
     end
     return false
 end
@@ -89,7 +81,6 @@ function escape(val)
 end
 
 function CompilationEngine:compileClass()
-
     self:require(T_KEYWORD, KW_CLASS)
     self:compileClassName()
     self:require(T_SYM, '{')
@@ -107,13 +98,13 @@ function CompilationEngine:isClassVarDec()
 end
 
 function CompilationEngine:compileClassVarDec()
-    tok, kwd = self:advance()
+    local tok, kwd = self:advance()
     self:compileDec(kwd_to_kind[kwd])
 end
 
 function CompilationEngine:compileDec(kind)
-    type,a = self:compileType()
-    name = self:compileVarName()
+    local type = self:compileType()
+    local name = self:compileVarName()
     self.symbols:define(name, type, kind)
     while self:isSym(',') do
         self:advance()
@@ -152,11 +143,11 @@ function CompilationEngine:isSubroutine()
 end
 
 function CompilationEngine:compileSubroutine()
-    tok, kwd = self:advance()
-    type = self:compileVoidOrType()
+    local tok, kwd = self:advance()
+    local type,a = self:compileVoidOrType()
     self:compileSubroutineName()
     self.symbols:startSubroutine()
-    if ked == KW_METHOD then
+    if kwd == KW_METHOD then
         self.symbols:define('this', self.curClass, SK_ARG)
     end
     self:require(T_SYM, '(')
@@ -181,8 +172,8 @@ end
 
 function CompilationEngine:compileParameter()
     if self:isType() then
-        type = self:compileType()
-        name = self:compileVarName()
+        local type,a = self:compileType()
+        local name = self:compileVarName()
         self.symbols:define(name, type, SK_ARG)
     end
 end
@@ -342,7 +333,7 @@ end
 function CompilationEngine:compileExpression()
     self:compileTerm()
     while self:isOp() do
-        local val,op = self:advance()
+        local tok,op = self:advance()
         self:compileTerm()
         self.vm:writeVmCmd(vmCmds[op])
     end
@@ -363,10 +354,9 @@ function CompilationEngine:compileTerm()
     elseif self:isUnaryOp() then
         local tok, op = self:advance()
         self:compileTerm()
-    
         self.vm:writeVmCmd(vmUnaryCmds[op])
     elseif self:isVarName() then
-        tok, name = self:advance()
+        local tok, name = self:advance()
         if self:isSym('[') then
             self:compileArraySubscript(name)
         elseif self:isSym('(.') then
@@ -378,7 +368,7 @@ function CompilationEngine:compileTerm()
 end
 
 function CompilationEngine:compileConst()
-    tok, val = self:advance()
+    local tok, val = self:advance()
     if tok == T_NUM then
         self.vm:pushConst(val)
     elseif tok == T_STR then
@@ -419,9 +409,9 @@ function CompilationEngine:compileArraySubscript(name)
 end
 
 function CompilationEngine:compileSubroutineCall(name)
-    type, kind, index = self.symbols:lookup(name)
+    t = self.symbols:lookup(name)
     if self:isSym('.') then
-        numArgs, name = self:compileDottedSubroutineCall(name, type)
+        numArgs, name = self:compileDottedSubroutineCall(name, t[1])
     else
         numArgs = 1
         self.vm:pushThisPtr()
@@ -434,8 +424,8 @@ function CompilationEngine:compileSubroutineCall(name)
 end
 
 function CompilationEngine:compileDottedSubroutineCall(name, type)
-    numArgs = 0
-    objName = name
+    local numArgs = 0
+    local objName = name
     self:advance()
     name = self:compileVarName()
     if self:isBuiltinType(type) then
