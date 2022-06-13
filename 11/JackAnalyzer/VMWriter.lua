@@ -40,5 +40,6 @@ end
 function VMWriter:writeReturn() self:writeCommand("return", '', '') end
 
 function VMWriter:writeCommand(cmd, arg1, arg2)
+    --if cmd == 'or' then error() end
     self.outfile:write(cmd .. ' ' .. arg1 .. ' ' .. arg2 .. '\n')
 end

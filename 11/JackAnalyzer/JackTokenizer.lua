@@ -161,8 +161,9 @@ function split(line)
     return ans
 end
 
+--start a prefix, and there is no character after
 function starts(String, prefix)
-    return string.sub(String, 1, string.len(prefix)) == prefix
+    return string.sub(String, 1, string.len(prefix)) == prefix and string.match(string.sub(String, prefix:len()+1,prefix:len()+1),'%s')~=nil
 end
 
 function token(word)

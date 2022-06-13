@@ -1,4 +1,4 @@
-function Mainmain 0
+function Main.main 0
 push constant 1
 push constant 2
 push constant 3

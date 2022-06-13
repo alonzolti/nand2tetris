@@ -1,4 +1,4 @@
-function Mainmain 0
+function Main.main 1
 push constant 8001
 push constant 16
 push constant 1
@@ -7,100 +7,100 @@ call Main.fillMemory 3
 pop temp 0
 push constant 8000
 call Memory.peek 1
-pop  
-push  
+pop local 0
+push local 0
 call Main.convert 1
 pop temp 0
 push constant 0
 return  
-function Mainconvert 0
-push constant 1
-neg  
-pop  
-label label1 
-push  
+function Main.convert 3
+push constant 0
 not  
-if-goto label2 
-push  
+pop local 2
+label LABEL_1 
+push local 2
+not  
+if-goto LABEL_2 
+push local 1
 push constant 1
 add  
-pop  
-push  
+pop local 1
+push local 0
 call Main.nextMask 1
-pop  
-push  
+pop local 0
+push local 1
 push constant 16
 gt  
 not  
 not  
-if-goto label4 
-push  
-push  
+if-goto LABEL_4 
+push argument 0
+push local 0
 and  
 push constant 0
 eq  
 not  
 not  
-if-goto label6 
+if-goto LABEL_6 
 push constant 8000
-push  
+push local 1
 add  
 push constant 1
 call Memory.poke 2
 pop temp 0
-goto label5 
-label label6 
+goto LABEL_5 
+label LABEL_6 
 push constant 8000
-push  
+push local 1
 add  
 push constant 0
 call Memory.poke 2
 pop temp 0
-label label5 
-goto label3 
-label label6 
+label LABEL_5 
+goto LABEL_3 
+label LABEL_6 
 push constant 0
-pop  
-label label5 
-goto label1 
-label label6 
+pop local 2
+label LABEL_5 
+goto LABEL_1 
+label LABEL_6 
 push constant 0
 return  
-function MainnextMask 0
-push  
+function Main.nextMask 0
+push argument 0
 push constant 0
 eq  
 not  
-if-goto label8 
+if-goto LABEL_8 
 push constant 1
 return  
-goto label7 
-label label8 
-push  
+goto LABEL_7 
+label LABEL_8 
+push argument 0
 push constant 2
 call Math.multiply 2  
 return  
-label label7 
-function MainfillMemory 0
-label label9 
-push  
+label LABEL_7 
+function Main.fillMemory 0
+label LABEL_9 
+push argument 1
 push constant 0
 gt  
 not  
-if-goto label10 
-push  
-push  
+if-goto LABEL_10 
+push argument 0
+push argument 2
 call Memory.poke 2
 pop temp 0
-push  
+push argument 1
 push constant 1
 sub  
-pop  
-push  
+pop argument 1
+push argument 0
 push constant 1
 add  
-pop  
-goto label9 
-label label10 
+pop argument 0
+goto LABEL_9 
+label LABEL_10 
 push constant 0
 return  

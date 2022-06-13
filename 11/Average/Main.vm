@@ -1,4 +1,4 @@
-function Mainmain 0
+function Main.main 4
 push constant 18
 call String.new 1
 push constant 72
@@ -38,20 +38,20 @@ call String.appendChar 2
 push constant 32
 call String.appendChar 2
 call Keyboard.readInt 1
-pop  
-push  
+pop local 1
+push local 1
 call Array.new 1
-pop  
+pop local 0
 push constant 0
-pop  
-label label1 
-push  
-push  
+pop local 2
+label LABEL_1 
+push local 2
+push local 1
 lt  
 not  
-if-goto label2 
-push  
-push  
+if-goto LABEL_2 
+push local 0
+push local 2
 add  
 push constant 16
 call String.new 1
@@ -88,24 +88,24 @@ call String.appendChar 2
 push constant 32
 call String.appendChar 2
 call Keyboard.readInt 1
-pop temp 1
+pop temp 0
 pop pointer 1
-push temp 1
+push temp 0
 pop that 0
-push  
-push  
-push  
+push local 3
+push local 0
+push local 2
 add  
 pop pointer 1
 push that 0
 add  
-pop  
-push  
+pop local 3
+push local 2
 push constant 1
 add  
-pop  
-goto label1 
-label label2 
+pop local 2
+goto LABEL_1 
+label LABEL_2 
 push constant 15
 call String.new 1
 push constant 84
@@ -140,8 +140,8 @@ push constant 32
 call String.appendChar 2
 call Output.printString 1
 pop temp 0
-push  
-push  
+push local 3
+push local 1
 call Math.divide 2  
 call Output.printInt 1
 pop temp 0

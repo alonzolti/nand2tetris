@@ -72,7 +72,7 @@ vmCmds = {'add','sub','neg','eq','gt','lt','and','or','not'}
 --segments 
 SE_CONST=1
 SE_ARG=2
-SE_LOCA=3
+SE_LOCAL=3
 SE_STATIC=4
 SE_THIS=5
 SE_THAT=6

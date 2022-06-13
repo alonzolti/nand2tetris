@@ -23,17 +23,6 @@ end
 function CompilationEngine:vmFunctionName()
     return self.curClass .. '.' .. self.curSubroutine
 end
--- work
-function CompilationEngine:vmPushVariable(name)
-    t = self.symbols:lookup(name)
-    self.vm:writePush(t[2], t[3])
-end
-
--- work
-function CompilationEngine:vmPopVariable(name)
-    t = self.symbols:lookup(name)
-    self.vm:writePop(t[2], t[3])
-end
 
 -- the next token must be tok,val and check if it is
 -- work
@@ -102,17 +91,17 @@ end
 function CompilationEngine:compileClassName()
     self.curClass = self:compileVarName()
 end
---work
+-- work
 function CompilationEngine:isClassVarDec()
     return self:isKeyWord({KW_STATIC, KW_FIELD})
 end
---work
+-- work
 function CompilationEngine:compileClassVarDec()
     local tok, kwd = self:advance()
     self:compileDec(kwd_to_kind[kwd])
 end
 
---work
+-- work
 function CompilationEngine:compileDec(kind)
     local type = self:compileType()
     local name = self:compileVarName()
@@ -125,7 +114,7 @@ function CompilationEngine:compileDec(kind)
     end
     self:require(T_SYM, ';')
 end
---work
+-- work
 function CompilationEngine:isType()
     return self:isToken(T_ID) or self:isKeyWord({KW_INT, KW_CHAR, KW_BOOLEAN})
 end
@@ -254,7 +243,7 @@ function CompilationEngine:compileDo()
     self:require(T_KEYWORD, KW_DO)
     name = self:require(T_ID)
     self:compileSubroutineCall(name)
-    self.vm:writePop(SE_TEMP,0)
+    self.vm:writePop(SE_TEMP, 0)
     self:require(T_SYM, ';')
 end
 
@@ -271,12 +260,29 @@ function CompilationEngine:compileLet()
     if subscript then
         self:popArrayElement()
     else
-        self:vmPopVariable(name)
+        self.vm:writePop(self:getSeg(self.symbols:kindOf(name)),
+                         self.symbols:indexOf(name))
     end
 end
+
+function CompilationEngine:getSeg(kind)
+    if kind == SK_FIELD then
+        return SE_THIS
+    elseif kind == SK_STATIC then
+        return SE_STATIC
+    elseif kind == SK_VAR then
+        return SE_LOCAL
+    elseif kind == SK_ARG then
+        return SE_ARG
+    else
+        return SE_NONE
+    end
+end
+
 -- work
 function CompilationEngine:compileBasePlusIndex(name)
-    self:vmPushVariable(name)
+    self.vm:writePush(self:getSeg(self.symbols:kindOf(name)),
+                      self.symbols:indexOf(name))
     self:advance()
     self:compileExpression()
     self:require(T_SYM, ']')
@@ -284,16 +290,17 @@ function CompilationEngine:compileBasePlusIndex(name)
 end
 
 function CompilationEngine:popArrayElement()
-    self.vm:popTemp(TEMP_ARRAY)
-    self.vm:popThatPtr()
-    self.vm:pushTemp(TEMP_ARRAY)
-    self.vm:popThat()
+    self.vm:writePop(SE_TEMP, 0)
+    self.vm:writePop(SE_POINTER, 1)
+    self.vm:writePush(SE_TEMP, 0)
+    self.vm:writePop(SE_THAT, 0)
 end
 
 function CompilationEngine:isWhile() return self:isKeyWord({KW_WHILE}) end
 
 function CompilationEngine:compileWhile()
     self:require(T_KEYWORD, KW_WHILE)
+
     label = self:newLabel()
     self.vm:writeLabel(label)
     self:compileCondExpressionStatements(label)
@@ -306,7 +313,7 @@ function CompilationEngine:compileReturn()
     if not self:isSym(';') then
         self:compileExpression()
     else
-        self.vm:writePush(SE_CONST,0)
+        self.vm:writePush(SE_CONST, 0)
     end
     self:require(T_SYM, ';')
     self.vm:writeReturn()
@@ -343,7 +350,7 @@ end
 
 function CompilationEngine:newLabel()
     self.labelNum = self.labelNum + 1
-    return 'label' .. self.labelNum
+    return 'LABEL_' .. self.labelNum
 end
 
 function CompilationEngine:compileExpression()
@@ -353,10 +360,10 @@ function CompilationEngine:compileExpression()
         self:compileTerm()
         if op == '+' then
             op = 'add'
-        elseif op == '-'then
+        elseif op == '-' then
             op = 'sub'
         elseif op == '*' then
-            op = "call Math.multipy 2"
+            op = "call Math.multiply 2"
         elseif op == '/' then
             op = "call Math.divide 2"
         elseif op == '<' then
@@ -372,7 +379,7 @@ function CompilationEngine:compileExpression()
         else
             error()
         end
-        self.vm:writeCommand(op,'','')
+        self.vm:writeCommand(op, '', '')
     end
 end
 
@@ -403,85 +410,84 @@ function CompilationEngine:compileTerm()
         elseif self:isSym('(.') then
             self:compileSubroutineCall(name)
         else
-            self:vmPushVariable(name)
+            self.vm:writePush(self:getSeg(self.symbols:kindOf(name)),
+                              self.symbols:indexOf(name))
         end
     end
 end
---work
+-- work
 function CompilationEngine:compileConst()
     local tok, val = self:advance()
     if tok == T_NUM then
-        self.vm:writePush(SE_CONST,val)
+        self.vm:writePush(SE_CONST, val)
     elseif tok == T_STR then
         self:writeStringConstInit(val)
     elseif tok == T_KEYWORD then
         self:compileKwdConst(val)
     end
 end
---work
+-- work
 function CompilationEngine:writeStringConstInit(val)
-    self.vm:writePush(SE_CONST,val:len())
+    self.vm:writePush(SE_CONST, val:len())
     self.vm:writeCall('String.new', 1)
     for c in val:gmatch(".") do
-        self.vm:writePush(SE_CONST,string.byte(c))
+        self.vm:writePush(SE_CONST, string.byte(c))
         self.vm:writeCall('String.appendChar', 2)
     end
 end
---work
+-- work
 function CompilationEngine:compileKwdConst(kwd)
     if kwd == KW_THIS then
-        self.vm:writePush(SE_POINTER,0)
+        self.vm:writePush(SE_POINTER, 0)
     elseif kwd == KW_TRUE then
-        self.vm:writePush(SE_CONST,'')
+        self.vm:writePush(SE_CONST, 0)
         self.vm:writeArithmetic(CMD_NOT)
     else
-        self.vm:writePush(SE_CONST,0)
+        self.vm:writePush(SE_CONST, 0)
     end
 end
 
 function CompilationEngine:compileArraySubscript(name)
-    self:vmPushVariable(name)
+    self.vm:writePush(self:getSeg(self.symbols:kindOf(name)),
+                      self.symbols:indexOf(name))
     self:require(T_SYM, '[')
     self:compileExpression()
     self:require(T_SYM, ']')
-    self.vm:writeVmCmd('add')
-    self.vm:popThatPtr()
-    self.vm:pushThat()
+    self.vm:writeArithmetic(CMD_ADD)
+    self.vm:writePop(SE_POINTER, 1)
+    self.vm:writePush(SE_THAT, 0)
 end
 
 function CompilationEngine:compileSubroutineCall(name)
-    t = self.symbols:lookup(name)
+    numArgs = 0
     if self:isSym('.') then
-        numArgs, name = self:compileDottedSubroutineCall(name, t[1])
+        self:require(T_SYM, '.')
+        objName = name
+        _, name = self:advance()
+        type = self.symbols:typeOf(objName)
+        if self:isBuiltinType(type) then
+            error()
+        elseif type == nil then
+            name = objName .. '.' .. name
+        else
+            numArgs = 1
+
+            self.vm:writePush(self:getSeg(self.symbols:kindOf(objName)),
+                              self.symbols:indexOf(objName))
+            name = self.symbols:typeOf(objName) .. '.' .. name
+        end
         self:require(T_SYM, '(')
         numArgs = numArgs + self:compileExpressionList()
         self:require(T_SYM, ')')
         self.vm:writeCall(name, numArgs)
-    else-- ='('
-        self:require(T_SYM,'(')
-        self.vm:writePush(SE_POINTER,0)
-        numArgs = self:compileExpressionList()+1
-        self:require(T_SYM,')')
-        self.vm:writeCall(self.curClass..'.'..name,numArgs)
+    else -- ='('
+        self:require(T_SYM, '(')
+        self.vm:writePush(SE_POINTER, 0)
+        numArgs = self:compileExpressionList() + 1
+        self:require(T_SYM, ')')
+        self.vm:writeCall(self.curClass .. '.' .. name, numArgs)
     end
 
-end
-
-function CompilationEngine:compileDottedSubroutineCall(name, type)
-    local numArgs = 0
-    local objName = name
-    self:advance()
-    name = self:compileVarName()
-    if self:isBuiltinType(type) then
-        error()
-    elseif type == nil then
-        name = objName .. '.' .. name
-    else
-        numArgs = 1
-        self.vm:writePush(segments[self.symbols:kindOf(objName)],self.symbols:indexOf(objName))
-        name = self.symbols:typeOf(objName) .. '.' .. name
-    end
-    return numArgs, name
 end
 
 function CompilationEngine:isBuiltinType(type)
