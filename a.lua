@@ -1,1 +1,0 @@
-io.open("d.txt",'r')

@@ -37,7 +37,7 @@ function JackTokenizer:advance()
         self.tokenType = T_ERROR
         self.val = 0
     end
-    --self:writeXml()
+    self:writeXml()
     return self.tokenType, self.val
 end
 
