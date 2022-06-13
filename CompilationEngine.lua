@@ -4,6 +4,7 @@ require "SymbolTable"
 require "VMWriter"
 CompilationEngine = {tokenizer, vm, symbols, curClass, curSubroutine, labelNum}
 
+-- constructor
 function CompilationEngine:new(file)
     local t = {}
     setmetatable(t, CompilationEngine)
@@ -18,20 +19,24 @@ function CompilationEngine:new(file)
     return t
 end
 
+-- return current function name, className.subroutineName
 function CompilationEngine:vmFunctionName()
-    return self.curClass ..'.'.. self.curSubroutine
+    return self.curClass .. '.' .. self.curSubroutine
 end
-
+-- work
 function CompilationEngine:vmPushVariable(name)
     t = self.symbols:lookup(name)
-    self.vm:writePush(segments[t[2]], t[3])
+    self.vm:writePush(t[2], t[3])
 end
 
+-- work
 function CompilationEngine:vmPopVariable(name)
     t = self.symbols:lookup(name)
-    self.vm:writePop(segments[t[2]], t[3])
+    self.vm:writePop(t[2], t[3])
 end
 
+-- the next token must be tok,val and check if it is
+-- work
 function CompilationEngine:require(tok, val)
     local curTok, curVal = self:advance()
     if tok ~= curTok or ((tok == T_KEYWORD or tok == T_SYM) and val ~= curVal) then
@@ -40,18 +45,26 @@ function CompilationEngine:require(tok, val)
         return curVal
     end
 end
-
+-- advance the token, return the token and it's value
+-- work
 function CompilationEngine:advance() return self.tokenizer:advance() end
 
+-- check the next token equal to what we need and return true/false
+-- work
 function CompilationEngine:isToken(tok, val)
     nextTok, nextVal = self.tokenizer:peek()
-    return (val == nil and nextTok == tok) or (tok == nextTok and val == nextVal)
+    return (val == nil and nextTok == tok) or
+               (tok == nextTok and val == nextVal)
 end
-
+-- open the file for writing
+-- work
 function CompilationEngine:openOut(file) self.vm:openOut(file) end
-
+-- close the file
+-- work
 function CompilationEngine:closeOut() self.vm:closeOut() end
 
+-- if the next token is in keywords that are given in th eparameter
+-- work
 function CompilationEngine:isKeyWord(keywords)
     curTok, curVal = self.tokenizer:peek()
     for _, value in pairs(keywords) do
@@ -60,6 +73,8 @@ function CompilationEngine:isKeyWord(keywords)
     return false
 end
 
+-- is the next token is a symbol
+-- work
 function CompilationEngine:isSym(symbo)
     curTok, curVal = self.tokenizer:peek()
     for c in symbo:gmatch(".") do
@@ -68,52 +83,49 @@ function CompilationEngine:isSym(symbo)
     return false
 end
 
-function escape(val)
-    if val == '<' then
-        return "&lt;"
-    elseif val == ">" then
-        return "&gt;"
-    elseif val == "&" then
-        return "&amp;"
-    else
-        return val
-    end
-end
-
+-- compile a complete class
+-- work
 function CompilationEngine:compileClass()
     self:require(T_KEYWORD, KW_CLASS)
+    -- class doesn't need to be in symbol table
     self:compileClassName()
+
     self:require(T_SYM, '{')
+
     while self:isClassVarDec() do self:compileClassVarDec() end
     while self:isSubroutine() do self:compileSubroutine() end
     self:require(T_SYM, '}')
 end
 
+-- compile class name
+-- work
 function CompilationEngine:compileClassName()
     self.curClass = self:compileVarName()
 end
-
+--work
 function CompilationEngine:isClassVarDec()
     return self:isKeyWord({KW_STATIC, KW_FIELD})
 end
-
+--work
 function CompilationEngine:compileClassVarDec()
     local tok, kwd = self:advance()
     self:compileDec(kwd_to_kind[kwd])
 end
 
+--work
 function CompilationEngine:compileDec(kind)
     local type = self:compileType()
     local name = self:compileVarName()
     self.symbols:define(name, type, kind)
     while self:isSym(',') do
+
         self:advance()
         name = self:compileVarName()
         self.symbols:define(name, type, kind)
     end
     self:require(T_SYM, ';')
 end
-
+--work
 function CompilationEngine:isType()
     return self:isToken(T_ID) or self:isKeyWord({KW_INT, KW_CHAR, KW_BOOLEAN})
 end
@@ -134,8 +146,10 @@ function CompilationEngine:compileType()
     end
 end
 
+-- work
 function CompilationEngine:isVarName() return self:isToken(T_ID) end
 
+-- work
 function CompilationEngine:compileVarName() return self:require(T_ID) end
 
 function CompilationEngine:isSubroutine()
@@ -144,7 +158,7 @@ end
 
 function CompilationEngine:compileSubroutine()
     local tok, kwd = self:advance()
-    local type,a = self:compileVoidOrType()
+    local type, a = self:compileVoidOrType()
     self:compileSubroutineName()
     self.symbols:startSubroutine()
     if kwd == KW_METHOD then
@@ -172,7 +186,7 @@ end
 
 function CompilationEngine:compileParameter()
     if self:isType() then
-        local type,a = self:compileType()
+        local type, a = self:compileType()
         local name = self:compileVarName()
         self.symbols:define(name, type, SK_ARG)
     end
@@ -186,19 +200,21 @@ function CompilationEngine:compileSubroutineBody(kwd)
     self:require(T_SYM, '}')
 end
 
+-- work
 function CompilationEngine:writeFuncDecl(kwd)
     self.vm:writeFunction(self:vmFunctionName(), self.symbols:varCount(SK_VAR))
     self:loadThisPtr(kwd)
 end
 
+-- work
 function CompilationEngine:loadThisPtr(kwd)
     if kwd == KW_METHOD then
-        self.vm:pushArg(0)
-        self.vm:popThisPtr()
+        self.vm:writePush(SE_ARG, 0)
+        self.vm:writePop(SE_POINTER, 0)
     elseif kwd == KW_CONSTRUCTOR then
-        self.vm:pushConst(self.symbols:varCount(SK_FIELD))
-        self.vm:writeCall('Memory.alloc', 1)
-        self.vm:popThisPtr()
+        self.vm:writePush(SE_CONST, self.symbols:varCount(SK_FIELD))
+        self.vm:writeCall("Memory.alloc", 1)
+        self.vm:writePop(SE_POINTER, 0)
     end
 end
 
@@ -238,7 +254,7 @@ function CompilationEngine:compileDo()
     self:require(T_KEYWORD, KW_DO)
     name = self:require(T_ID)
     self:compileSubroutineCall(name)
-    self.vm:popTemp(TEMP_RETURN)
+    self.vm:writePop(SE_TEMP,0)
     self:require(T_SYM, ';')
 end
 
@@ -258,13 +274,13 @@ function CompilationEngine:compileLet()
         self:vmPopVariable(name)
     end
 end
-
+-- work
 function CompilationEngine:compileBasePlusIndex(name)
     self:vmPushVariable(name)
     self:advance()
     self:compileExpression()
     self:require(T_SYM, ']')
-    self.vm:writeVmCmd('add')
+    self.vm:writeArithmetic(CMD_ADD)
 end
 
 function CompilationEngine:popArrayElement()
@@ -290,7 +306,7 @@ function CompilationEngine:compileReturn()
     if not self:isSym(';') then
         self:compileExpression()
     else
-        self.vm:pushConst(0)
+        self.vm:writePush(SE_CONST,0)
     end
     self:require(T_SYM, ';')
     self.vm:writeReturn()
@@ -315,14 +331,14 @@ function CompilationEngine:compileCondExpressionStatements(label)
     self:require(T_SYM, '(')
     self:compileExpression()
     self:require(T_SYM, ')')
-    self.vm:writeVmCmd('not')
-    notifyLabel = self:newLabel()
-    self.vm:writeIf(notifyLabel)
+    self.vm:writeArithmetic(CMD_NOT)
+    elseLable = self:newLabel()
+    self.vm:writeIf(elseLable)
     self:require(T_SYM, '{')
     self:compileStatements()
     self:require(T_SYM, '}')
     self.vm:writeGoto(label)
-    self.vm:writeLabel(notifyLabel)
+    self.vm:writeLabel(elseLable)
 end
 
 function CompilationEngine:newLabel()
@@ -333,9 +349,30 @@ end
 function CompilationEngine:compileExpression()
     self:compileTerm()
     while self:isOp() do
-        local tok,op = self:advance()
+        local tok, op = self:advance()
         self:compileTerm()
-        self.vm:writeVmCmd(vmCmds[op])
+        if op == '+' then
+            op = 'add'
+        elseif op == '-'then
+            op = 'sub'
+        elseif op == '*' then
+            op = "call Math.multipy 2"
+        elseif op == '/' then
+            op = "call Math.divide 2"
+        elseif op == '<' then
+            op = "lt"
+        elseif op == '>' then
+            op = "gt"
+        elseif op == '=' then
+            op = 'eq'
+        elseif op == '&' then
+            op = 'and'
+        elseif op == '|' then
+            op = 'or'
+        else
+            error()
+        end
+        self.vm:writeCommand(op,'','')
     end
 end
 
@@ -354,7 +391,11 @@ function CompilationEngine:compileTerm()
     elseif self:isUnaryOp() then
         local tok, op = self:advance()
         self:compileTerm()
-        self.vm:writeVmCmd(vmUnaryCmds[op])
+        if op == '-' then
+            self.vm:writeArithmetic(CMD_NEG)
+        else
+            self.vm:writeArithmetic(CMD_NOT)
+        end
     elseif self:isVarName() then
         local tok, name = self:advance()
         if self:isSym('[') then
@@ -366,35 +407,35 @@ function CompilationEngine:compileTerm()
         end
     end
 end
-
+--work
 function CompilationEngine:compileConst()
     local tok, val = self:advance()
     if tok == T_NUM then
-        self.vm:pushConst(val)
+        self.vm:writePush(SE_CONST,val)
     elseif tok == T_STR then
         self:writeStringConstInit(val)
     elseif tok == T_KEYWORD then
         self:compileKwdConst(val)
     end
 end
-
+--work
 function CompilationEngine:writeStringConstInit(val)
-    self.vm:pushConst(val:len())
+    self.vm:writePush(SE_CONST,val:len())
     self.vm:writeCall('String.new', 1)
     for c in val:gmatch(".") do
-        self.vm:pushConst(string.byte(c))
+        self.vm:writePush(SE_CONST,string.byte(c))
         self.vm:writeCall('String.appendChar', 2)
     end
 end
-
+--work
 function CompilationEngine:compileKwdConst(kwd)
     if kwd == KW_THIS then
-        self.vm:pushThisPtr()
+        self.vm:writePush(SE_POINTER,0)
     elseif kwd == KW_TRUE then
-        self.vm:pushConst(1)
-        self.vm:writeVmCmd('neg')
+        self.vm:writePush(SE_CONST,'')
+        self.vm:writeArithmetic(CMD_NOT)
     else
-        self.vm:pushConst(0)
+        self.vm:writePush(SE_CONST,0)
     end
 end
 
@@ -412,15 +453,18 @@ function CompilationEngine:compileSubroutineCall(name)
     t = self.symbols:lookup(name)
     if self:isSym('.') then
         numArgs, name = self:compileDottedSubroutineCall(name, t[1])
-    else
-        numArgs = 1
-        self.vm:pushThisPtr()
-        name = self.curClass .. '.' .. name
+        self:require(T_SYM, '(')
+        numArgs = numArgs + self:compileExpressionList()
+        self:require(T_SYM, ')')
+        self.vm:writeCall(name, numArgs)
+    else-- ='('
+        self:require(T_SYM,'(')
+        self.vm:writePush(SE_POINTER,0)
+        numArgs = self:compileExpressionList()+1
+        self:require(T_SYM,')')
+        self.vm:writeCall(self.curClass..'.'..name,numArgs)
     end
-    self:require(T_SYM, '(')
-    numArgs = numArgs + self:compileExpressionList()
-    self:require(T_SYM, ')')
-    self.vm:writeCall(name, numArgs)
+
 end
 
 function CompilationEngine:compileDottedSubroutineCall(name, type)
@@ -434,7 +478,7 @@ function CompilationEngine:compileDottedSubroutineCall(name, type)
         name = objName .. '.' .. name
     else
         numArgs = 1
-        self:vmPushVariable(objName)
+        self.vm:writePush(segments[self.symbols:kindOf(objName)],self.symbols:indexOf(objName))
         name = self.symbols:typeOf(objName) .. '.' .. name
     end
     return numArgs, name

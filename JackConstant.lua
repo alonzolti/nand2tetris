@@ -56,22 +56,31 @@ kwd_to_kind[KW_STATIC] = SK_STATIC
 kwd_to_kind[KW_FIELD] = SK_FIELD
 
 -- VM Writer Support
-vmCmds = {}
-vmCmds['+'] = "add"
-vmCmds['-'] = "sub"
-vmCmds['*'] = "call Math.multiply 2"
-vmCmds['/'] = "call Math.divide 2"
-vmCmds["<"] = "lt"
-vmCmds[">"] = "gt"
-vmCmds["="] = "eq"
-vmCmds["&"] = "and"
-vmCmds["|"] = "or"
 
-vmUnaryCmds = {}
-vmUnaryCmds["-"] = "neg"
-vmUnaryCmds["~"] = "not"
+--vm commands
+CMD_ADD = 1
+CMD_SUB = 2
+CMD_NEG=3
+CMD_EQ=4
+CMD_GT=5
+CMD_LT=6
+CMD_AND=7
+CMD_OR=8
+CMD_NOT=9
+vmCmds = {'add','sub','neg','eq','gt','lt','and','or','not'}
 
-segments = {"static","this","argument","local","ERROR"}
+--segments 
+SE_CONST=1
+SE_ARG=2
+SE_LOCA=3
+SE_STATIC=4
+SE_THIS=5
+SE_THAT=6
+SE_POINTER=7
+SE_TEMP=8
+SE_NONE=9
+
+segments = {'constant','argument','local','static','this','that','pointer','temp'}
 
 -- Temporary registers
 TEMP_RETURN = 0 -- Use temp 0 for popping an unused return value

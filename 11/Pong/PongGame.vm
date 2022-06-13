@@ -1,5 +1,5 @@
 function PongGame.new 0
-push constant 0
+push constant 7
 call Memory.alloc 1
 pop pointer 0
 call Screen.clearScreen 0
@@ -87,7 +87,7 @@ return
 function PongGame.getInstance 0
 push static 0
 return  
-function PongGame.run 0
+function PongGame.run 1
 push pointer 0
 pop pointer 0
 label label1 
@@ -211,7 +211,7 @@ label label14
 label label13 
 push constant 0
 return  
-function PongGame.moveBall 0
+function PongGame.moveBall 5
 push pointer 0
 pop pointer 0
 push this 1

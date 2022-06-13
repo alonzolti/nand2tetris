@@ -1,59 +1,44 @@
 VMWriter = {outfile}
 
-function VMWriter:new(file)
+function VMWriter:new()
     t = {}
     setmetatable(t, VMWriter)
     self.__index = self
     return t
 end
-
+-- open file for writing
 function VMWriter:openOut(file)
     self.outfile = io.open(string.gsub(file, '.jack', '.vm'), 'w')
 end
-
+-- close outfile
 function VMWriter:closeOut() self.outfile:close() end
 
 function VMWriter:writePush(segment, index)
-    self:writeVmCmd('push', segment, index)
+    self:writeCommand("push", segments[segment], index)
 end
 
-function VMWriter:writePop(segment, index) self:writeVmCmd('pop', segment, index) end
-
-function VMWriter:writeArithmetic(op) self:writeVmCmd(op) end
-
-function VMWriter:writeLabel(label) self:writeVmCmd('label', label) end
-
-function VMWriter:writeGoto(label) self:writeVmCmd("goto", label) end
-
-function VMWriter:writeIf(label) self:writeVmCmd('if-goto', label) end
-
-function VMWriter:writeCall(name, numArgs) self:writeVmCmd('call', name, numArgs) end
-
-function VMWriter:writeFunction(name, numLocals)
-    self:writeVmCmd('function', name, numLocals)
+function VMWriter:writePop(segment, index)
+    self:writeCommand("pop", segments[segment], index)
 end
 
-function VMWriter:writeReturn() self:writeVmCmd('return') end
+function VMWriter:writeArithmetic(command)
+    self:writeCommand(vmCmds[command], '', '')
+end
 
-function VMWriter:writeVmCmd(cmd, arg1, arg2)
-    if arg1 == nil then arg1 = '' end
-    if arg2 == nil then arg2 = '' end
+function VMWriter:writeLabel(label) self:writeCommand("label", label, "") end
+
+function VMWriter:writeGoto(label) self:writeCommand("goto", label, '') end
+
+function VMWriter:writeIf(label) self:writeCommand("if-goto", label, "") end
+
+function VMWriter:writeCall(name, args) self:writeCommand("call", name, args) end
+
+function VMWriter:writeFunction(name, locals)
+    self:writeCommand("function", name, locals)
+end
+
+function VMWriter:writeReturn() self:writeCommand("return", '', '') end
+
+function VMWriter:writeCommand(cmd, arg1, arg2)
     self.outfile:write(cmd .. ' ' .. arg1 .. ' ' .. arg2 .. '\n')
 end
-
-function VMWriter:pushConst(val) self:writePush('constant', val) end
-
-function VMWriter:pushArg(argNum) self:writePush('pointer', 0) end
-
-function VMWriter:pushThisPtr() self:writePush('pointer', 0) end
-
-function VMWriter:popThisPtr() self:writePop('pointer', 0) end
-
-function VMWriter:popThatPtr() self:writePop('pointer', 1) end
-
-function VMWriter:pushThat() self:writePush('that', 0) end
-
-function VMWriter:popThat() self:writePop('that', 0) end
-function VMWriter:pushTemp(tempNum) self:writePush('temp', tempNum) end
-
-function VMWriter:popTemp(tempNum) self:writePop('temp', tempNum) end
