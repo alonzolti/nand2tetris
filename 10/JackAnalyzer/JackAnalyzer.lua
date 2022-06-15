@@ -4,7 +4,7 @@ function main()
     if (arg[1] == nil or arg[2] ~= nil) then
         print("Wrong number of parameters")
     else
-        for p, v in pairs(scandir(arg[1])) do 
+        for p, v in pairs(getFiles(arg[1])) do 
             if string.match(v,'.jack') then
                 CompilationEngine:new(arg[1]..'/'..v) end
             end

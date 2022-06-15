@@ -1,10 +1,10 @@
-require "07.VMtranslator.VMconstant"
+require "VMconstant"
 
-Parser = {lines,tokens,curCommand,curToken}
+VMTokenizer = {lines,tokens,curCommand,curToken}
 
-function Parser:new(file)
+function VMTokenizer:new(file)
     local t = {}
-    setmetatable(t,Parser)
+    setmetatable(t,VMTokenizer)
     local rFile = io.open(file,'r')
     t.lines = rFile:read('*a')
     t:tokenize(self.lines:split('\n'))
@@ -14,21 +14,21 @@ function Parser:new(file)
 end
 
 
-function Parser:hasMoreCommands()
+function VMTokenizer:hasMoreCommands()
     return self.tokens[1]~=nil
 end
 
-function Parser:nextCommand()
+function VMTokenizer:nextCommand()
     self.curCommand = self.tokens:remove(1)
     self:nextToken()
     return self.curCommand
 end
 
-function Parser:hasNextToken()
+function VMTokenizer:hasNextToken()
     return self.curCommand[1] ~=nil
 end
 
-function Parser:nextToken()
+function VMTokenizer:nextToken()
     if self:hasMoreCommands() then
         self.curToken = self.curCommand.remove(1)
     else
@@ -37,7 +37,7 @@ function Parser:nextToken()
     return self.curToken
 end
 
-function Parser:peekToken()
+function VMTokenizer:peekToken()
     if self:hasNextToken() then
         return self.curCommand[1]
     else
@@ -45,23 +45,23 @@ function Parser:peekToken()
     end
 end
 
-function Parser:tokenize(lines)
+function VMTokenizer:tokenize(lines)
     for line in lines do
         self:tokenizeLine(line)
     end
 end
 
-function Parser:tokenizeLine(line)
+function VMTokenizer:tokenizeLine(line)
     for word in string.gmatch(self:removeComment(line),"%S+")do
         table.insert(self.tokens,self:token(word))
     end
 end
 
-function Parser:removeComments(line)
+function VMTokenizer:removeComments(line)
     return line:gsub('//.*','')
 end
 
-function Parser:token(word)
+function VMTokenizer:token(word)
     if self:isNum(word) then
         return {NUM,word}
     elseif self:isId(word) then
@@ -71,11 +71,11 @@ function Parser:token(word)
     end
 end
 
-function Parser:isNum(word)
+function VMTokenizer:isNum(word)
     return string.match(word, "%d+")
 end
 
-function Parser:isId(word)
+function VMTokenizer:isId(word)
     return string.match(word, "[A-Za-z_][A-Za-z0-9_]*")
 end
 
