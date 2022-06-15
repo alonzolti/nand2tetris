@@ -90,7 +90,7 @@ function JackTokenizer:intVal() return self.val end
 function JackTokenizer:stringVal() return self.val end
 
 function tokenize(lines)
-    t = {}
+    local t = {}
     for k, w in pairs(split(removeComments(lines))) do
         table.insert(t, token(w))
     end
