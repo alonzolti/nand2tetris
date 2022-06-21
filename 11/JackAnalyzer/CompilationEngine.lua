@@ -341,8 +341,9 @@ function CompilationEngine:compileIf()
 end
 
 function CompilationEngine:newLabel()
+    local a = self.labelNum
     self.labelNum = self.labelNum + 1
-    return 'LABEL_' .. self.labelNum
+    return 'LABEL_' .. a
 end
 
 function CompilationEngine:compileExpression()
