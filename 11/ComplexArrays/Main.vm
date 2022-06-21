@@ -406,7 +406,7 @@ push local 2
 push constant 0
 eq  
 not  
-if-goto LABEL_2 
+if-goto LABEL_1 
 push local 0
 push constant 10
 call Main.fill 2
@@ -463,9 +463,9 @@ pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
-goto LABEL_1 
-label LABEL_2 
+goto LABEL_2 
 label LABEL_1 
+label LABEL_2 
 push constant 44
 call String.new 1
 push constant 84
@@ -678,12 +678,12 @@ push constant 2
 call Math.multiply 2  
 return  
 function Main.fill 0
-label LABEL_3 
+label LABEL_4 
 push argument 1
 push constant 0
 gt  
 not  
-if-goto LABEL_4 
+if-goto LABEL_3 
 push argument 1
 push constant 1
 sub  
@@ -697,7 +697,7 @@ pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
-goto LABEL_3 
-label LABEL_4 
+goto LABEL_4 
+label LABEL_3 
 push constant 0
 return  
