@@ -110,7 +110,6 @@ function JackTokenizer:split(line)
     return ans
 end
 
--- start a prefix, and there is no character after
 function JackTokenizer:starts(String, prefix)
     return string.sub(String, 1, string.len(prefix)) == prefix and
                string.match(

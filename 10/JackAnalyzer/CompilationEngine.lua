@@ -1,14 +1,12 @@
 require "JackTokenizer"
 require "JackConstant"
-CompilationEngine = {tokenizer, outfile, parsedRules}
+CompilationEngine = {tokenizer = nil, outfile = nil, parsedRules = {}}
 
 function CompilationEngine:new(file)
     local t = {}
-    setmetatable(t,CompilationEngine)
+    setmetatable(t, CompilationEngine)
     self.__index = self
     t.tokenizer = JackTokenizer:new(file)
-    t.outfile = nil;
-    t.parsedRules = {}
     t:openOut(file)
     t:compileClass()
     t:closeOut()
@@ -16,8 +14,7 @@ function CompilationEngine:new(file)
 end
 
 function CompilationEngine:require(tok, val)
-    curTok, curVal = self:advance()
-    
+    local curTok, curVal = self:advance()
     if tok ~= curTok or ((tok == T_KEYWORD or tok == T_SYM) and val ~= curVal) then
         error()
     else
@@ -26,14 +23,13 @@ function CompilationEngine:require(tok, val)
 end
 
 function CompilationEngine:advance()
-    local tok,val = self.tokenizer:advance()
-
+    local tok, val = self.tokenizer:advance()
     self:writeTerminal(tok, val)
     return tok, val
 end
 
 function CompilationEngine:isToken(tok, val)
-    nextTok, nextVal = self.tokenizer:peek()
+    local nextTok, nextVal = self.tokenizer:peek()
     if (val == nil) then
         return nextTok == tok
     else
@@ -74,14 +70,14 @@ function CompilationEngine:startNonTerminal(rule)
 end
 
 function CompilationEngine:endNotTerminal()
-    rule = table.remove(self.parsedRules)
+    local rule = table.remove(self.parsedRules)
     self.outfile:write('</' .. rule .. '>\n')
 end
 
 function CompilationEngine:compileClass()
     self:startNonTerminal('class')
     self:require(T_KEYWORD, KW_CLASS)
-    className = self:require(T_ID)
+    local className = self:require(T_ID)
     self:require(T_SYM, '{')
     while self:isClassVarDec() do self:compileClassVarDec() end
     while self:isSubroutine() do self:compileSubroutine() end
@@ -97,7 +93,7 @@ end
 
 function CompilationEngine:compileClassVarDec()
     self:startNonTerminal('classVarDec')
-    tok, kwd = self:advance()
+    local tok, kwd = self:advance()
     self:compileDec()
     self:endNotTerminal()
 end
@@ -113,7 +109,7 @@ function CompilationEngine:compileDec()
 end
 
 function CompilationEngine:isType()
-    tok, val = self.tokenizer:peek()
+    local tok, val = self.tokenizer:peek()
     return tok == T_KEYWORD and
                (val == KW_INT or val == KW_CHAR or val == KW_BOOLEAN) or tok ==
                T_ID
@@ -140,14 +136,14 @@ function CompilationEngine:isVarName() return self:isToken(T_ID) end
 function CompilationEngine:compileVarName() self:require(T_ID) end
 
 function CompilationEngine:isSubroutine()
-    tok, kwd = self.tokenizer:peek()
+    local tok, kwd = self.tokenizer:peek()
     return tok == T_KEYWORD and
                (kwd == KW_CONSTRUCTOR or kwd == KW_FUNCTION or kwd == KW_METHOD)
 end
 
 function CompilationEngine:compileSubroutine()
     self:startNonTerminal('subroutineDec')
-    kwd = self:advance()
+    local kwd = self:advance()
     self:compileVoidOrType()
     self:compileVarName()
     self:require(T_SYM, '(')
@@ -168,7 +164,7 @@ function CompilationEngine:compileParameterList()
 end
 
 function CompilationEngine:compileParameter()
-    if self:isType()then
+    if self:isType() then
         self:compileType()
         self:compileVarName()
     end
@@ -259,7 +255,7 @@ function CompilationEngine:isReturn() return self:isToken(T_KEYWORD, KW_RETURN) 
 function CompilationEngine:compileReturn()
     self:startNonTerminal('returnStatement')
     self:require(T_KEYWORD, KW_RETURN)
-    if self:isToken(T_SYM, ';')==false then self:compileExpression() end
+    if self:isToken(T_SYM, ';') == false then self:compileExpression() end
     self:require(T_SYM, ';')
     self:endNotTerminal()
 end
@@ -278,12 +274,12 @@ function CompilationEngine:compileIf()
 end
 
 function CompilationEngine:compileCondExpressionStatements()
-    self:require(T_SYM,'(')
+    self:require(T_SYM, '(')
     self:compileExpression()
-    self:require(T_SYM,')')
-    self:require(T_SYM,'{')
+    self:require(T_SYM, ')')
+    self:require(T_SYM, '{')
     self:compileStatements()
-    self:require(T_SYM,'}')
+    self:require(T_SYM, '}')
 end
 
 function CompilationEngine:compileExpression()
@@ -342,7 +338,7 @@ function CompilationEngine:compileSubroutineCall()
 end
 
 function CompilationEngine:isKeywordConstant()
-    tok, kwd = self.tokenizer:peek()
+    local tok, kwd = self.tokenizer:peek()
     return tok == T_KEYWORD and
                (kwd == KW_TRUE or kwd == KW_FALSE or kwd == KW_NULL or kwd ==
                    KW_THIS)
@@ -353,7 +349,7 @@ function CompilationEngine:isUnaryOp()
 end
 
 function CompilationEngine:isOp()
-    tok, sym = self.tokenizer:peek()
+    local tok, sym = self.tokenizer:peek()
     return tok == T_SYM and string.find('+-*/&|<>=', sym) ~= nil
 end
 
