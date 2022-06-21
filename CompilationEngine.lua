@@ -199,6 +199,14 @@ end
 -- work
 function CompilationEngine:writeFuncDecl(kwd)
     self.vm:writeFunction(self:vmFunctionName(), self.symbols:varCount(SK_VAR))
+    if kwd == KW_METHOD then
+        self.vm:writePush(SE_ARG,0)
+        self.vm:writePop(SE_POINTER,0)
+    elseif kwd == KW_CONSTRUCTOR then
+        self.vm:writePush(SE_CONST,self.symbols:varCount(SK_FIELD))
+        self.vm:writeCall("Memory.alloc",1)
+        self.vm:writePop(SE_POINTER,0)
+    end
 end
 
 -- work
