@@ -2,7 +2,7 @@ require "JackTokenizer"
 require "JackConstant"
 require "SymbolTable"
 require "VMWriter"
-CompilationEngine = {tokenizer, vm, symbols, curClass, curSubroutine, labelNum}
+CompilationEngine = {tokenizer = nil, vm=nil, symbols = nil, curClass =nil, curSubroutine =nil, labelNum=nil}
 
 -- constructor
 function CompilationEngine:new(file)
@@ -41,7 +41,7 @@ function CompilationEngine:advance() return self.tokenizer:advance() end
 -- check the next token equal to what we need and return true/false
 -- work
 function CompilationEngine:isToken(tok, val)
-    nextTok, nextVal = self.tokenizer:peek()
+    local nextTok, nextVal = self.tokenizer:peek()
     return (val == nil and nextTok == tok) or
                (tok == nextTok and val == nextVal)
 end
@@ -55,7 +55,7 @@ function CompilationEngine:closeOut() self.vm:closeOut() end
 -- if the next token is in keywords that are given in th eparameter
 -- work
 function CompilationEngine:isKeyWord(keywords)
-    curTok, curVal = self.tokenizer:peek()
+    local curTok, curVal = self.tokenizer:peek()
     for _, value in pairs(keywords) do
         if value == curVal and curTok == T_KEYWORD then return true end
     end
@@ -65,7 +65,7 @@ end
 -- is the next token is a symbol
 -- work
 function CompilationEngine:isSym(symbo)
-    curTok, curVal = self.tokenizer:peek()
+    local curTok, curVal = self.tokenizer:peek()
     for c in symbo:gmatch(".") do
         if c == curVal and curTok == T_SYM then return true end
     end
@@ -241,7 +241,7 @@ function CompilationEngine:isDo() return self:isKeyWord({KW_DO}) end
 
 function CompilationEngine:compileDo()
     self:require(T_KEYWORD, KW_DO)
-    name = self:require(T_ID)
+    local name = self:require(T_ID)
     self:compileSubroutineCall(name)
     self.vm:writePop(SE_TEMP, 0)
     self:require(T_SYM, ';')
@@ -251,8 +251,8 @@ function CompilationEngine:isLet() return self:isKeyWord({KW_LET}) end
 
 function CompilationEngine:compileLet()
     self:require(T_KEYWORD, KW_LET)
-    name = self:compileVarName()
-    subscript = self:isSym('[')
+    local name = self:compileVarName()
+    local subscript = self:isSym('[')
     if subscript then self:compileBasePlusIndex(name) end
     self:require(T_SYM, '=')
     self:compileExpression()
@@ -300,10 +300,19 @@ function CompilationEngine:isWhile() return self:isKeyWord({KW_WHILE}) end
 
 function CompilationEngine:compileWhile()
     self:require(T_KEYWORD, KW_WHILE)
-
-    label = self:newLabel()
-    self.vm:writeLabel(label)
-    self:compileCondExpressionStatements(label)
+    local continueLabel = self:newLabel()
+    local topLabel = self:newLabel()
+    self.vm:writeLabel(topLabel)
+    self:require(T_SYM,'(')
+    self:compileExpression()
+    self:require(T_SYM,')')
+    self.vm:writeArithmetic(CMD_NOT)
+    self.vm:writeIf(continueLabel)
+    self:require(T_SYM,'{')
+    self:compileStatements()
+    self:require(T_SYM,'}')
+    self.vm:writeGoto(topLabel)
+    self.vm:writeLabel(continueLabel)
 end
 
 function CompilationEngine:isReturn() return self:isKeyWord({KW_RETURN}) end
@@ -323,29 +332,26 @@ function CompilationEngine:isIf() return self:isKeyWord({KW_IF}) end
 
 function CompilationEngine:compileIf()
     self:require(T_KEYWORD, KW_IF)
-    label = self:newLabel()
-    self:compileCondExpressionStatements(label)
+    local elseLabel = self:newLabel()
+    local endLabel = self:newLabel()
+    self:require(T_SYM,'(')
+    self:compileExpression()
+    self:require(T_SYM,')')
+    self.vm:writeArithmetic(CMD_NOT)
+    self.vm:writeIf(elseLabel)
+    self:require(T_SYM,'{')
+    self:compileStatements()
+    self:require(T_SYM, '}')
+    self.vm:writeGoto(endLabel)
+    self.vm:writeLabel(elseLabel)
+
     if self:isKeyWord({KW_ELSE}) then
         self:advance()
         self:require(T_SYM, '{')
         self:compileStatements()
         self:require(T_SYM, '}')
     end
-    self.vm:writeLabel(label)
-end
-
-function CompilationEngine:compileCondExpressionStatements(label)
-    self:require(T_SYM, '(')
-    self:compileExpression()
-    self:require(T_SYM, ')')
-    self.vm:writeArithmetic(CMD_NOT)
-    elseLable = self:newLabel()
-    self.vm:writeIf(elseLable)
-    self:require(T_SYM, '{')
-    self:compileStatements()
-    self:require(T_SYM, '}')
-    self.vm:writeGoto(label)
-    self.vm:writeLabel(elseLable)
+    self.vm:writeLabel(endLabel)
 end
 
 function CompilationEngine:newLabel()
@@ -459,10 +465,10 @@ function CompilationEngine:compileArraySubscript(name)
 end
 
 function CompilationEngine:compileSubroutineCall(name)
-    numArgs = 0
+    local numArgs = 0
     if self:isSym('.') then
         self:require(T_SYM, '.')
-        objName = name
+        local objName = name
         _, name = self:advance()
         type = self.symbols:typeOf(objName)
         if self:isBuiltinType(type) then
@@ -509,7 +515,7 @@ function CompilationEngine:isUnaryOp() return self:isSym('-~') end
 function CompilationEngine:isOp() return self:isSym('+-*/&|<>=') end
 
 function CompilationEngine:compileExpressionList()
-    numArgs = 0
+    local numArgs = 0
     if self:isTerm() then
         self:compileExpression()
         numArgs = 1

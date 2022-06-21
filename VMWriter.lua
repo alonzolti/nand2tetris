@@ -1,7 +1,7 @@
 VMWriter = {outfile}
 
 function VMWriter:new()
-    t = {}
+    local t = {}
     setmetatable(t, VMWriter)
     self.__index = self
     return t
