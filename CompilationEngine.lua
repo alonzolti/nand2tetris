@@ -2,7 +2,14 @@ require "JackTokenizer"
 require "JackConstant"
 require "SymbolTable"
 require "VMWriter"
-CompilationEngine = {tokenizer = nil, vm=nil, symbols = nil, curClass =nil, curSubroutine =nil, labelNum=nil}
+CompilationEngine = {
+    tokenizer = nil,
+    vm = nil,
+    symbols = nil,
+    curClass = nil,
+    curSubroutine = nil,
+    labelNum = nil
+}
 
 -- constructor
 function CompilationEngine:new(file)
@@ -103,7 +110,7 @@ end
 
 -- work
 function CompilationEngine:compileDec(kind)
-    local type = self:compileType()
+    local _, type = self:compileType()
     local name = self:compileVarName()
     self.symbols:define(name, type, kind)
     while self:isSym(',') do
@@ -147,7 +154,7 @@ end
 
 function CompilationEngine:compileSubroutine()
     local tok, kwd = self:advance()
-    local type, a = self:compileVoidOrType()
+    local _, type = self:compileVoidOrType()
     self:compileSubroutineName()
     self.symbols:startSubroutine()
     if kwd == KW_METHOD then
@@ -175,7 +182,7 @@ end
 
 function CompilationEngine:compileParameter()
     if self:isType() then
-        local type, a = self:compileType()
+        local _, type = self:compileType()
         local name = self:compileVarName()
         self.symbols:define(name, type, SK_ARG)
     end
@@ -192,7 +199,6 @@ end
 -- work
 function CompilationEngine:writeFuncDecl(kwd)
     self.vm:writeFunction(self:vmFunctionName(), self.symbols:varCount(SK_VAR))
-    self:loadThisPtr(kwd)
 end
 
 -- work
@@ -303,14 +309,14 @@ function CompilationEngine:compileWhile()
     local continueLabel = self:newLabel()
     local topLabel = self:newLabel()
     self.vm:writeLabel(topLabel)
-    self:require(T_SYM,'(')
+    self:require(T_SYM, '(')
     self:compileExpression()
-    self:require(T_SYM,')')
+    self:require(T_SYM, ')')
     self.vm:writeArithmetic(CMD_NOT)
     self.vm:writeIf(continueLabel)
-    self:require(T_SYM,'{')
+    self:require(T_SYM, '{')
     self:compileStatements()
-    self:require(T_SYM,'}')
+    self:require(T_SYM, '}')
     self.vm:writeGoto(topLabel)
     self.vm:writeLabel(continueLabel)
 end
@@ -334,12 +340,12 @@ function CompilationEngine:compileIf()
     self:require(T_KEYWORD, KW_IF)
     local elseLabel = self:newLabel()
     local endLabel = self:newLabel()
-    self:require(T_SYM,'(')
+    self:require(T_SYM, '(')
     self:compileExpression()
-    self:require(T_SYM,')')
+    self:require(T_SYM, ')')
     self.vm:writeArithmetic(CMD_NOT)
     self.vm:writeIf(elseLabel)
-    self:require(T_SYM,'{')
+    self:require(T_SYM, '{')
     self:compileStatements()
     self:require(T_SYM, '}')
     self.vm:writeGoto(endLabel)
@@ -477,7 +483,6 @@ function CompilationEngine:compileSubroutineCall(name)
             name = objName .. '.' .. name
         else
             numArgs = 1
-
             self.vm:writePush(self:getSeg(self.symbols:kindOf(objName)),
                               self.symbols:indexOf(objName))
             name = self.symbols:typeOf(objName) .. '.' .. name
