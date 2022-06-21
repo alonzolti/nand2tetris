@@ -4,16 +4,16 @@ function main()
     if (arg[1] == nil or arg[2] ~= nil) then
         print("Wrong number of parameters")
     else
-        for p, v in pairs(scandir(arg[1])) do 
-            if string.match(v,'.jack') then
-                CompilationEngine:new(arg[1]..'/'..v) end
+        if string.match(arg[1], '.jack') then
+            CompilationEngine:new(arg[1])
+        else
+            for p, v in pairs(scandir(arg[1])) do
+                if string.match(v, '.jack') then
+                    CompilationEngine:new(arg[1] .. '/' .. v)
+                end
             end
+        end
     end
-end
-
-function getFiles(path)
-    if string.match(path, '.jack') then return {path} end
-    return scandir(path)
 end
 
 function scandir(directory)

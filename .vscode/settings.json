@@ -1,6 +1,12 @@
 {
     "Lua.diagnostics.globals": [
         "getFiles",
-        "scandir"
+        "scandir",
+        "keywords",
+        "symbols",
+        "kwd_to_kind",
+        "vmCmds",
+        "segments",
+        "main"
     ]
 }

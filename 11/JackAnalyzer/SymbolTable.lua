@@ -1,14 +1,11 @@
 require "JackConstant"
 
-SymbolTable = {classSymbols, subroutineSymbols, symbols, index}
+SymbolTable = {classSymbols = {}, subroutineSymbols = {}, index = {0,0,0,0}}
 
 function SymbolTable:new()
     local t = {}
     setmetatable(t, SymbolTable)
     self.__index = self
-    t.classSymbols = {}
-    t.subroutineSymbols = {}
-    t.index = {0, 0, 0, 0}
     return t
 end
 
@@ -20,11 +17,11 @@ end
 
 function SymbolTable:define(name, type, kind)
     if kind == SK_ARG or kind == SK_VAR then
-        a = self.index[kind]
+        local a = self.index[kind]
         self.index[kind] = self.index[kind] + 1
         self.subroutineSymbols[name] = {type, kind, a}
     elseif kind == SK_STATIC or kind == SK_FIELD then
-        a = self.index[kind]
+        local a = self.index[kind]
         self.index[kind] = self.index[kind] + 1
         self.classSymbols[name] = {type, kind, a}
     end
