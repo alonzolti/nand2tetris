@@ -1,14 +1,14 @@
-CodeWriter = {outFile, vmFile, labelNum}
+CodeWriter = {outFile  =nil, vmFile = '', labelNum = 0}
 
 function CodeWriter:new(file)
-    t = {}
+    local t = {}
     setmetatable(t, CodeWriter)
-    t.outFile = io:open(file, 'w')
-    t.vmFile = ''
-    t.labelNum = 0
+    self.__index = self
+    t.outFile = io.open(file, "w")
+    return t
 end
 
-function CodeWriter:closeOut() self.outFile:close() end
+function CodeWriter:closeFile() self.outFile:close() end
 
 function CodeWriter:writeInit()
     self:aCommand('256')
@@ -144,7 +144,7 @@ end
 
 function CodeWriter:isStaticSeg(seg) return seg == S_STATIC end
 
-function CodeWriter:isconstSeg(seg) return seg == S_CONST end
+function CodeWriter:isConstSeg(seg) return seg == S_CONST end
 
 function CodeWriter:unary(comp)
     self:decSp()
@@ -263,8 +263,8 @@ end
 
 function CodeWriter:loadSegIndex(seg, index, indir)
     local comp = 'D+A'
-    if index < 0 then
-        index = -index
+    if string.sub(index,1,1) == '-' then
+        index = string.gsub(index,'-','')
         comp = 'A-D'
     end
 
@@ -277,12 +277,12 @@ end
 
 function CodeWriter:regToDest(dest, reg)
     self:aCommand(self:asmReg(reg))
-    self:ccommand(dest, 'M')
+    self:cCommand(dest, 'M')
 end
 
 function CodeWriter:compToReg(reg, comp)
-    self:aCommand(self:asmRe(reg))
-    self:ccommand('M', comp)
+    self:aCommand(self:asmReg(reg))
+    self:cCommand('M', comp)
 end
 
 function CodeWriter:regToReg(dest, src)
@@ -337,3 +337,9 @@ function CodeWriter:cCommand(dest, comp, jump)
 end
 
 function CodeWriter:lCommand(label) self.outFile:write('(' .. label .. ')\n') end
+
+function CodeWriter:newLabel()
+    local a = self.labelNum
+    self.labelNum = a + 1
+    return a
+end

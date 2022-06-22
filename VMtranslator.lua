@@ -1,22 +1,22 @@
 require "CodeWriter"
 require "Parser"
 require "VMconstant"
-VMTranslator = {outFile}
+VMTranslator = {}
 
-function VMTranslator:new(infiles, outfile)
+function VMTranslator:new()
     local t = {}
     setmetatable(t, VMTranslator)
-    t.outFile = outfile
+    self.__index = self
     return t
 end
 
-function VMTranslator:translateAll()
+function VMTranslator:translateAll(infiles, outFile,dir)
     if infiles ~= nil then
         local codeWriter = CodeWriter:new(outFile)
-        codeWriter:writeInit()
-        for file in infiles do
+        --codeWriter:writeInit()
+        for _,file in pairs(infiles) do
             if file:match(".vm") then
-                self:translate(file, codeWriter)
+                self:translate(dir..file, codeWriter)
             end
         end
         codeWriter:closeFile()
@@ -31,24 +31,24 @@ function VMTranslator:translate(file, codeWriter)
     end
 end
 
-function VMTranslator:getCode(parser, codeWriter)
+function VMTranslator:genCode(parser, codeWriter)
     local cmd = parser:commandType()
     if cmd == C_ARITHMETIC then
-        codeWriter:writeArithmetic(parser:arg1())
+        codeWriter:writeArithmetic(parser:argF())
     elseif cmd == C_PUSH then
-        codeWriter:writePushPop(cmd, parser:arg1(), parser:arg2())
+        codeWriter:writePushPop(cmd, parser:argF(), parser:argS())
     elseif cmd == C_LABEL then
-        codeWriter:writeLabel(parser:arg1())
+        codeWriter:writeLabel(parser:argF())
     elseif cmd == C_GOTO then
-        codeWriter:writeGoto(parser:arg1())
+        codeWriter:writeGoto(parser:argF())
     elseif cmd == C_IF then
-        codeWriter:writeIf(parser:arg1())
+        codeWriter:writeIf(parser:argF())
     elseif cmd == C_FUNCTION then
-        codeWriter:writeFunction(parser:arg1(), parser:arg2())
+        codeWriter:writeFunction(parser:argF(), parser:argS())
     elseif cmd == C_RETURN then
         codeWriter:writeReturn()
     elseif cmd == C_CALL then
-        codeWriter:writeCall(parser:arg1(), parser:arg2())
+        codeWriter:writeCall(parser:argF(), parser:argS())
     end
 end
 
@@ -56,12 +56,11 @@ function main()
     if (arg[1] == nil or arg[2] ~= nil) then
         print("Wrong number of parameters")
     else
-        local t = VMTranslator:new()
-        print(arg[1])
+        local translator = VMTranslator:new()
         if string.match(arg[1], '.vm') then
-            t:translateAll({arg[1]}, arg[1]:gsub('.vm', 'asm'))
+            translator:translateAll({arg[1]}, arg[1]:gsub('.vm', 'asm'),'')
         else
-            t:translateAll(scandir(arg[1]), arg[1] .. '/' .. arg[1] .. '.asm')
+            translator:translateAll(scandir(arg[1]), arg[1] .. '/' .. 'b.asm',arg[1]..'/')
         end
     end
 end
