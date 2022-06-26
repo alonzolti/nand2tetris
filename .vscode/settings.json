@@ -8,6 +8,8 @@
         "vmCmds",
         "segments",
         "main",
-        "escape"
+        "escape",
+        "commandType",
+        "tokenType"
     ]
 }

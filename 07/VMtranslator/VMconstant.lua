@@ -58,7 +58,7 @@ commandType = {}
 commandType['add'] = C_ARITHMETIC
 commandType['sub'] = C_ARITHMETIC
 commandType['neg'] = C_ARITHMETIC
-commandType['eg'] = C_ARITHMETIC
+commandType['eq'] = C_ARITHMETIC
 commandType['gt'] = C_ARITHMETIC
 commandType['lt'] = C_ARITHMETIC
 commandType['and'] = C_ARITHMETIC
@@ -72,7 +72,3 @@ commandType['pop'] = C_POP
 commandType['call'] = C_CALL
 commandType['return'] = C_RETURN
 commandType['function'] = C_FUNCTION
-
-nullary = {'add', 'sub', 'neg', 'eq', 'gt', 'lt', 'and', 'or', 'not', 'return'}
-unary = {'label', 'goto', 'if-goto'}
-binary = {'push', 'pop', 'function', 'call'}
