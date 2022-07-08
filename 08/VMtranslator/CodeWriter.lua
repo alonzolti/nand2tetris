@@ -8,6 +8,10 @@ function CodeWriter:new(file)
     return t
 end
 
+function CodeWriter:setFileName(file)
+    self.vmFile = file:match("[^\\]*.vm$")
+end
+
 function CodeWriter:closeFile() self.outFile:close() end
 
 function CodeWriter:writeInit()
@@ -64,7 +68,7 @@ function CodeWriter:writePushPop(cmd, seg, ind)
         elseif seg == "pointer" and ind == '1' then
             self:pushTemplate1("THAT", ind, true)
         elseif seg == "static" then
-            self:pushTemplate1(16 + tonumber(ind), ind, true)
+            self.outFile:write("@"..self.vmFile..ind..'\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n')
         end
     elseif cmd == C_POP then
         if seg == "local" then
@@ -82,7 +86,7 @@ function CodeWriter:writePushPop(cmd, seg, ind)
         elseif seg == 'pointer' and ind == '1' then
             self:popTemplate1("THAT", ind, true)
         elseif seg == "static" then
-            self:popTemplate1(16 + tonumber(ind), ind, true)
+            self.outFile:write('@'..self.vmFile..ind..'\nD=A\n@R13\nM=D\n@SP\nM=M-1\nA=M\nD=M\n@R13\nA=M\nM=D\n')
         end
     end
 end

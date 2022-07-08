@@ -1,4 +1,4 @@
-require "VMconstant"
+require "07\\VMtranslator\\VMconstant"
 
 VMTokenizer = {lines = nil,
 tokens = {},--list of all tokens

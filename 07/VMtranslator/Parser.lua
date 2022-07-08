@@ -1,5 +1,5 @@
-require "VMTokenizer"
-require "VMconstant"
+require "07\\VMtranslator\\VMTokenizer"
+require "07\\VMtranslator\\VMconstant"
 
 Parser = {tokenizer = nil, cmdType = C_ERROR, arg1 = '', arg2 = 0}
 

@@ -1,6 +1,6 @@
-require "CodeWriter"
-require "Parser"
-require "VMconstant"
+require "08\\VMtranslator\\CodeWriter"
+require "08\\VMtranslator\\Parser"
+require "08\\VMtranslator\\VMconstant"
 VMTranslator = {}
 
 function VMTranslator:new()
@@ -13,9 +13,10 @@ end
 function VMTranslator:translateAll(infiles, outFile)
     if infiles ~= nil then
         local codeWriter = CodeWriter:new(outFile) 
-        codeWriter:writeInit()       
+        --codeWriter:writeInit()
         for _, file in pairs(infiles) do
             if file:match(".vm") then
+                codeWriter:setFileName(file)
                 self:translate(file, codeWriter)
             end
         end
