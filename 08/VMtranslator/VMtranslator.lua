@@ -13,10 +13,9 @@ end
 function VMTranslator:translateAll(infiles, outFile)
     if infiles ~= nil then
         local codeWriter = CodeWriter:new(outFile) 
-        --codeWriter:writeInit()
+        codeWriter:writeInit()
         for _, file in pairs(infiles) do
             if file:match(".vm") then
-                codeWriter:setFileName(file)
                 self:translate(file, codeWriter)
             end
         end
@@ -26,6 +25,7 @@ end
 
 function VMTranslator:translate(file, codeWriter)
     local parser = Parser:new(file)
+    codeWriter:setFileName(file)
     while parser:hasMoreCommands() do
         parser:advance()
         self:genCode(parser, codeWriter)
