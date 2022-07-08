@@ -63,7 +63,7 @@ function main()
             fileOutPath = arg[1]:gsub('.vm','.asm')
         else -- if it is a directory
             t = scandir(arg[1])
-            fileOutPath = arg[1] .. '/' .. arg[1]:sub(string.find(arg[1],'/[^/]*$')+1)..'.asm'
+            fileOutPath = arg[1] .. '\\' .. arg[1]:sub(string.find(arg[1],'\\[^\\]*$')+1)..'.asm'
         end
         local translator = VMTranslator:new()
         translator:translateAll(t,fileOutPath)
@@ -73,14 +73,14 @@ end
 --find all the vm files in the directory
 function scandir(directory)
     local i, t, popen = 0, {}, io.popen
-    local pfile = popen('ls -a "' .. directory .. '"')
-    for filename in pfile:lines() do
+    --for linux - 'ls -a "' .. directory .. '"'    
+    local pfile = popen('dir "'..directory..'" /b /a')
+    for filename in pfile:lines() do 
         if string.match(filename, '.vm') then
             i = i + 1
-            t[i] = directory.. '/' .. filename
+            t[i] = directory.. '\\' .. filename
         end
-    end
-    
+    end    
     pfile:close()
     return t
 end
