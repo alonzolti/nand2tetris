@@ -1,4 +1,4 @@
-require "JackConstant"
+require "11/JackAnalyzer/JackConstant"
 
 SymbolTable = {classSymbols = {}, subroutineSymbols = {}, index = {0,0,0,0}}
 

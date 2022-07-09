@@ -1,4 +1,4 @@
-require "CompilationEngine"
+require "10/JackAnalyzer/CompilationEngine"
 
 function main()
     if (arg[1] == nil or arg[2] ~= nil) then
@@ -18,7 +18,7 @@ end
 
 function scandir(directory)
     local i, t, popen = 0, {}, io.popen
-    local pfile = popen('ls -a "' .. directory .. '"')
+    local pfile = popen('dir "'..directory..'" /b /a')
     for filename in pfile:lines() do
         i = i + 1
         t[i] = filename

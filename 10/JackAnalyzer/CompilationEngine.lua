@@ -1,6 +1,6 @@
-require "JackTokenizer"
-require "JackConstant"
-CompilationEngine = {tokenizer = nil, outfile = nil, parsedRules = {}}
+require "10/JackAnalyzer/JackTokenizer"
+require "10/JackAnalyzer/JackConstant"
+CompilationEngine = { tokenizer = nil, outfile = nil, parsedRules = {} }
 
 function CompilationEngine:new(file)
     local t = {}
@@ -29,6 +29,7 @@ function CompilationEngine:advance()
 end
 
 function CompilationEngine:isToken(tok, val)
+
     local nextTok, nextVal = self.tokenizer:peek()
     if (val == nil) then
         return nextTok == tok
@@ -49,7 +50,7 @@ end
 
 function CompilationEngine:writeTerminal(tok, val)
     self.outfile:write("<" .. tokenType[tok] .. '> ' .. escape(val) .. ' </' ..
-                           tokenType[tok] .. '>\n')
+        tokenType[tok] .. '>\n')
 end
 
 function escape(val)
@@ -88,7 +89,7 @@ end
 
 function CompilationEngine:isClassVarDec()
     return self:isToken(T_KEYWORD, KW_STATIC) or
-               self:isToken(T_KEYWORD, KW_FIELD)
+        self:isToken(T_KEYWORD, KW_FIELD)
 end
 
 function CompilationEngine:compileClassVarDec()
@@ -111,8 +112,8 @@ end
 function CompilationEngine:isType()
     local tok, val = self.tokenizer:peek()
     return tok == T_KEYWORD and
-               (val == KW_INT or val == KW_CHAR or val == KW_BOOLEAN) or tok ==
-               T_ID
+        (val == KW_INT or val == KW_CHAR or val == KW_BOOLEAN) or tok ==
+        T_ID
 end
 
 function CompilationEngine:compileType()
@@ -138,7 +139,7 @@ function CompilationEngine:compileVarName() self:require(T_ID) end
 function CompilationEngine:isSubroutine()
     local tok, kwd = self.tokenizer:peek()
     return tok == T_KEYWORD and
-               (kwd == KW_CONSTRUCTOR or kwd == KW_FUNCTION or kwd == KW_METHOD)
+        (kwd == KW_CONSTRUCTOR or kwd == KW_FUNCTION or kwd == KW_METHOD)
 end
 
 function CompilationEngine:compileSubroutine()
@@ -196,7 +197,7 @@ end
 
 function CompilationEngine:isStatement()
     return self:isDo() or self:isLet() or self:isIf() or self:isWhile() or
-               self:isReturn()
+        self:isReturn()
 end
 
 function CompilationEngine:compileStatment()
@@ -267,8 +268,10 @@ function CompilationEngine:compileIf()
     self:require(T_KEYWORD, KW_IF)
     self:compileCondExpressionStatements()
     if self:isToken(T_KEYWORD, KW_ELSE) then
-        self:adnvace()
+        self:advance()
+        self:require(T_SYM, '{')
         self:compileStatements()
+        self:require(T_SYM, '}')
     end
     self:endNotTerminal()
 end
@@ -295,8 +298,8 @@ end
 
 function CompilationEngine:isTerm()
     return self:isToken(T_NUM) or self:isToken(T_STR) or
-               self:isKeywordConstant() or self:isVarName() or
-               self:isToken(T_SYM, '(') or self:isUnaryOp()
+        self:isKeywordConstant() or self:isVarName() or
+        self:isToken(T_SYM, '(') or self:isUnaryOp()
 end
 
 function CompilationEngine:compileTerm()
@@ -340,8 +343,8 @@ end
 function CompilationEngine:isKeywordConstant()
     local tok, kwd = self.tokenizer:peek()
     return tok == T_KEYWORD and
-               (kwd == KW_TRUE or kwd == KW_FALSE or kwd == KW_NULL or kwd ==
-                   KW_THIS)
+        (kwd == KW_TRUE or kwd == KW_FALSE or kwd == KW_NULL or kwd ==
+            KW_THIS)
 end
 
 function CompilationEngine:isUnaryOp()

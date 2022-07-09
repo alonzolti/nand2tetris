@@ -1,4 +1,4 @@
-require "JackConstant"
+require "11/JackAnalyzer/JackConstant"
 -- tokens - table of all tokens
 -- tokenType - type of the current token
 -- val - value of the current token

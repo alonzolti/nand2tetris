@@ -1,5 +1,5 @@
-require "07\\VMtranslator\\VMTokenizer"
-require "07\\VMtranslator\\VMconstant"
+require "08\\VMtranslator\\VMTokenizer"
+require "08\\VMtranslator\\VMconstant"
 
 Parser = {tokenizer = nil, cmdType = C_ERROR, arg1 = '', arg2 = 0}
 
@@ -42,7 +42,7 @@ function Parser:advance()
             self.cmdType = C_POP
         elseif val == "label" then
             self.cmdType = C_LABEL
-        elseif val == "if" then
+        elseif val == "if-goto" then
             self.cmdType = C_IF
         elseif val == "goto" then
             self.cmdType = C_GOTO

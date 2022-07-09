@@ -1,0 +1,1527 @@
+<class>
+    <keyword> class </keyword>
+    <identifier> Snake </identifier>
+    <symbol> { </symbol>
+    <classVarDec>
+        <keyword> field </keyword>
+        <identifier> SnakeGame </identifier>
+        <identifier> game </identifier>
+        <symbol> ; </symbol>
+    </classVarDec>
+    <classVarDec>
+        <keyword> field </keyword>
+        <keyword> int </keyword>
+        <identifier> posX </identifier>
+        <symbol> , </symbol>
+        <identifier> posY </identifier>
+        <symbol> ; </symbol>
+    </classVarDec>
+    <classVarDec>
+        <keyword> field </keyword>
+        <keyword> int </keyword>
+        <identifier> length </identifier>
+        <symbol> ; </symbol>
+    </classVarDec>
+    <classVarDec>
+        <keyword> field </keyword>
+        <keyword> int </keyword>
+        <identifier> growby </identifier>
+        <symbol> ; </symbol>
+    </classVarDec>
+    <classVarDec>
+        <keyword> field </keyword>
+        <keyword> int </keyword>
+        <identifier> togrow </identifier>
+        <symbol> ; </symbol>
+    </classVarDec>
+    <classVarDec>
+        <keyword> field </keyword>
+        <keyword> int </keyword>
+        <identifier> dir </identifier>
+        <symbol> , </symbol>
+        <identifier> lastdir </identifier>
+        <symbol> ; </symbol>
+    </classVarDec>
+    <classVarDec>
+        <keyword> field </keyword>
+        <identifier> Array </identifier>
+        <identifier> histX </identifier>
+        <symbol> , </symbol>
+        <identifier> histY </identifier>
+        <symbol> ; </symbol>
+    </classVarDec>
+    <classVarDec>
+        <keyword> field </keyword>
+        <keyword> int </keyword>
+        <identifier> histSize </identifier>
+        <symbol> ; </symbol>
+    </classVarDec>
+    <subroutineDec>
+        <keyword> constructor </keyword>
+        <identifier> Snake </identifier>
+        <identifier> new </identifier>
+        <symbol> ( </symbol>
+        <parameterList>
+            <identifier> SnakeGame </identifier>
+            <identifier> Agame </identifier>
+            <symbol> , </symbol>
+            <keyword> int </keyword>
+            <identifier> Ax </identifier>
+            <symbol> , </symbol>
+            <keyword> int </keyword>
+            <identifier> Ay </identifier>
+            <symbol> , </symbol>
+            <keyword> int </keyword>
+            <identifier> Alen </identifier>
+            <symbol> , </symbol>
+            <keyword> int </keyword>
+            <identifier> Agrowby </identifier>
+        </parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <varDec>
+                <keyword> var </keyword>
+                <keyword> int </keyword>
+                <identifier> i </identifier>
+                <symbol> ; </symbol>
+            </varDec>
+            <statements>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> game </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> Agame </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> posX </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> Ax </identifier>
+                        </term>
+                        <symbol> - </symbol>
+                        <term>
+                            <identifier> Alen </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> posY </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> Ay </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> length </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> Alen </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> growby </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> Agrowby </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> togrow </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <integerConstant> 0 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> dir </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <integerConstant> 4 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> lastdir </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <integerConstant> 4 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> histSize </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <integerConstant> 512 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> histX </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> Array </identifier>
+                            <symbol> . </symbol>
+                            <identifier> new </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList>
+                                <expression>
+                                    <term>
+                                        <identifier> histSize </identifier>
+                                    </term>
+                                </expression>
+                            </expressionList>
+                            <symbol> ) </symbol>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> histY </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> Array </identifier>
+                            <symbol> . </symbol>
+                            <identifier> new </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList>
+                                <expression>
+                                    <term>
+                                        <identifier> histSize </identifier>
+                                    </term>
+                                </expression>
+                            </expressionList>
+                            <symbol> ) </symbol>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> i </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <integerConstant> 0 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <whileStatement>
+                    <keyword> while </keyword>
+                    <symbol> ( </symbol>
+                    <expression>
+                        <term>
+                            <identifier> i </identifier>
+                        </term>
+                        <symbol> &lt; </symbol>
+                        <term>
+                            <identifier> length </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ) </symbol>
+                    <symbol> { </symbol>
+                    <statements>
+                        <letStatement>
+                            <keyword> let </keyword>
+                            <identifier> posX </identifier>
+                            <symbol> = </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> posX </identifier>
+                                </term>
+                                <symbol> + </symbol>
+                                <term>
+                                    <integerConstant> 1 </integerConstant>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </letStatement>
+                        <doStatement>
+                            <keyword> do </keyword>
+                            <identifier> drawHead </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList>
+                                <expression>
+                                    <term>
+                                        <identifier> game </identifier>
+                                        <symbol> . </symbol>
+                                        <identifier> getCycle </identifier>
+                                        <symbol> ( </symbol>
+                                        <expressionList></expressionList>
+                                        <symbol> ) </symbol>
+                                    </term>
+                                </expression>
+                            </expressionList>
+                            <symbol> ) </symbol>
+                            <symbol> ; </symbol>
+                        </doStatement>
+                        <letStatement>
+                            <keyword> let </keyword>
+                            <identifier> i </identifier>
+                            <symbol> = </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> i </identifier>
+                                </term>
+                                <symbol> + </symbol>
+                                <term>
+                                    <integerConstant> 1 </integerConstant>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </letStatement>
+                        <doStatement>
+                            <keyword> do </keyword>
+                            <identifier> game </identifier>
+                            <symbol> . </symbol>
+                            <identifier> nextCycle </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList></expressionList>
+                            <symbol> ) </symbol>
+                            <symbol> ; </symbol>
+                        </doStatement>
+                    </statements>
+                    <symbol> } </symbol>
+                </whileStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <expression>
+                        <term>
+                            <keyword> this </keyword>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> void </keyword>
+        <identifier> dispose </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <doStatement>
+                    <keyword> do </keyword>
+                    <identifier> histX </identifier>
+                    <symbol> . </symbol>
+                    <identifier> dispose </identifier>
+                    <symbol> ( </symbol>
+                    <expressionList></expressionList>
+                    <symbol> ) </symbol>
+                    <symbol> ; </symbol>
+                </doStatement>
+                <doStatement>
+                    <keyword> do </keyword>
+                    <identifier> histY </identifier>
+                    <symbol> . </symbol>
+                    <identifier> dispose </identifier>
+                    <symbol> ( </symbol>
+                    <expressionList></expressionList>
+                    <symbol> ) </symbol>
+                    <symbol> ; </symbol>
+                </doStatement>
+                <doStatement>
+                    <keyword> do </keyword>
+                    <identifier> Memory </identifier>
+                    <symbol> . </symbol>
+                    <identifier> deAlloc </identifier>
+                    <symbol> ( </symbol>
+                    <expressionList>
+                        <expression>
+                            <term>
+                                <keyword> this </keyword>
+                            </term>
+                        </expression>
+                    </expressionList>
+                    <symbol> ) </symbol>
+                    <symbol> ; </symbol>
+                </doStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> boolean </keyword>
+        <identifier> checkRewriteHistory </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <ifStatement>
+                    <keyword> if </keyword>
+                    <symbol> ( </symbol>
+                    <expression>
+                        <term>
+                            <identifier> game </identifier>
+                            <symbol> . </symbol>
+                            <identifier> getCycle </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList></expressionList>
+                            <symbol> ) </symbol>
+                        </term>
+                        <symbol> = </symbol>
+                        <term>
+                            <identifier> histSize </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ) </symbol>
+                    <symbol> { </symbol>
+                    <statements>
+                        <doStatement>
+                            <keyword> do </keyword>
+                            <identifier> rewriteHistory </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList></expressionList>
+                            <symbol> ) </symbol>
+                            <symbol> ; </symbol>
+                        </doStatement>
+                        <returnStatement>
+                            <keyword> return </keyword>
+                            <expression>
+                                <term>
+                                    <keyword> true </keyword>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </returnStatement>
+                    </statements>
+                    <symbol> } </symbol>
+                </ifStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <expression>
+                        <term>
+                            <keyword> false </keyword>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> void </keyword>
+        <identifier> rewriteHistory </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <varDec>
+                <keyword> var </keyword>
+                <keyword> int </keyword>
+                <identifier> i </identifier>
+                <symbol> , </symbol>
+                <identifier> src </identifier>
+                <symbol> , </symbol>
+                <identifier> dst </identifier>
+                <symbol> ; </symbol>
+            </varDec>
+            <statements>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> i </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> length </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> dst </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <integerConstant> 0 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> src </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> histSize </identifier>
+                        </term>
+                        <symbol> - </symbol>
+                        <term>
+                            <identifier> length </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <whileStatement>
+                    <keyword> while </keyword>
+                    <symbol> ( </symbol>
+                    <expression>
+                        <term>
+                            <identifier> i </identifier>
+                        </term>
+                        <symbol> &gt; </symbol>
+                        <term>
+                            <integerConstant> 0 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ) </symbol>
+                    <symbol> { </symbol>
+                    <statements>
+                        <letStatement>
+                            <keyword> let </keyword>
+                            <identifier> histX </identifier>
+                            <symbol> [ </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> dst </identifier>
+                                </term>
+                            </expression>
+                            <symbol> ] </symbol>
+                            <symbol> = </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> histX </identifier>
+                                    <symbol> [ </symbol>
+                                    <expression>
+                                        <term>
+                                            <identifier> src </identifier>
+                                        </term>
+                                    </expression>
+                                    <symbol> ] </symbol>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </letStatement>
+                        <letStatement>
+                            <keyword> let </keyword>
+                            <identifier> histY </identifier>
+                            <symbol> [ </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> dst </identifier>
+                                </term>
+                            </expression>
+                            <symbol> ] </symbol>
+                            <symbol> = </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> histY </identifier>
+                                    <symbol> [ </symbol>
+                                    <expression>
+                                        <term>
+                                            <identifier> src </identifier>
+                                        </term>
+                                    </expression>
+                                    <symbol> ] </symbol>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </letStatement>
+                        <letStatement>
+                            <keyword> let </keyword>
+                            <identifier> src </identifier>
+                            <symbol> = </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> src </identifier>
+                                </term>
+                                <symbol> + </symbol>
+                                <term>
+                                    <integerConstant> 1 </integerConstant>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </letStatement>
+                        <letStatement>
+                            <keyword> let </keyword>
+                            <identifier> dst </identifier>
+                            <symbol> = </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> dst </identifier>
+                                </term>
+                                <symbol> + </symbol>
+                                <term>
+                                    <integerConstant> 1 </integerConstant>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </letStatement>
+                        <letStatement>
+                            <keyword> let </keyword>
+                            <identifier> i </identifier>
+                            <symbol> = </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> i </identifier>
+                                </term>
+                                <symbol> - </symbol>
+                                <term>
+                                    <integerConstant> 1 </integerConstant>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </letStatement>
+                    </statements>
+                    <symbol> } </symbol>
+                </whileStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> int </keyword>
+        <identifier> posX </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <expression>
+                        <term>
+                            <identifier> posX </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> int </keyword>
+        <identifier> posY </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <expression>
+                        <term>
+                            <identifier> posY </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> int </keyword>
+        <identifier> getLength </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <expression>
+                        <term>
+                            <identifier> length </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> int </keyword>
+        <identifier> getDir </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <expression>
+                        <term>
+                            <identifier> dir </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> int </keyword>
+        <identifier> getLastDir </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <expression>
+                        <term>
+                            <identifier> lastdir </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> void </keyword>
+        <identifier> setDir </identifier>
+        <symbol> ( </symbol>
+        <parameterList>
+            <keyword> int </keyword>
+            <identifier> newdir </identifier>
+        </parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> dir </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> newdir </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> void </keyword>
+        <identifier> rememberDir </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> lastdir </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> dir </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> boolean </keyword>
+        <identifier> tryMove </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <varDec>
+                <keyword> var </keyword>
+                <identifier> SnakeGrid </identifier>
+                <identifier> grid </identifier>
+                <symbol> ; </symbol>
+            </varDec>
+            <statements>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> grid </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> game </identifier>
+                            <symbol> . </symbol>
+                            <identifier> getGrid </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList></expressionList>
+                            <symbol> ) </symbol>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <ifStatement>
+                    <keyword> if </keyword>
+                    <symbol> ( </symbol>
+                    <expression>
+                        <term>
+                            <identifier> dir </identifier>
+                        </term>
+                        <symbol> = </symbol>
+                        <term>
+                            <integerConstant> 1 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ) </symbol>
+                    <symbol> { </symbol>
+                    <statements>
+                        <ifStatement>
+                            <keyword> if </keyword>
+                            <symbol> ( </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> posY </identifier>
+                                </term>
+                                <symbol> = </symbol>
+                                <term>
+                                    <integerConstant> 0 </integerConstant>
+                                </term>
+                            </expression>
+                            <symbol> ) </symbol>
+                            <symbol> { </symbol>
+                            <statements>
+                                <returnStatement>
+                                    <keyword> return </keyword>
+                                    <expression>
+                                        <term>
+                                            <keyword> false </keyword>
+                                        </term>
+                                    </expression>
+                                    <symbol> ; </symbol>
+                                </returnStatement>
+                            </statements>
+                            <symbol> } </symbol>
+                            <keyword> else </keyword>
+                            <symbol> { </symbol>
+                            <statements>
+                                <letStatement>
+                                    <keyword> let </keyword>
+                                    <identifier> posY </identifier>
+                                    <symbol> = </symbol>
+                                    <expression>
+                                        <term>
+                                            <identifier> posY </identifier>
+                                        </term>
+                                        <symbol> - </symbol>
+                                        <term>
+                                            <integerConstant> 1 </integerConstant>
+                                        </term>
+                                    </expression>
+                                    <symbol> ; </symbol>
+                                </letStatement>
+                            </statements>
+                            <symbol> } </symbol>
+                        </ifStatement>
+                    </statements>
+                    <symbol> } </symbol>
+                </ifStatement>
+                <ifStatement>
+                    <keyword> if </keyword>
+                    <symbol> ( </symbol>
+                    <expression>
+                        <term>
+                            <identifier> dir </identifier>
+                        </term>
+                        <symbol> = </symbol>
+                        <term>
+                            <integerConstant> 2 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ) </symbol>
+                    <symbol> { </symbol>
+                    <statements>
+                        <ifStatement>
+                            <keyword> if </keyword>
+                            <symbol> ( </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> posY </identifier>
+                                </term>
+                                <symbol> = </symbol>
+                                <term>
+                                    <identifier> grid </identifier>
+                                    <symbol> . </symbol>
+                                    <identifier> sizeY </identifier>
+                                    <symbol> ( </symbol>
+                                    <expressionList></expressionList>
+                                    <symbol> ) </symbol>
+                                </term>
+                            </expression>
+                            <symbol> ) </symbol>
+                            <symbol> { </symbol>
+                            <statements>
+                                <returnStatement>
+                                    <keyword> return </keyword>
+                                    <expression>
+                                        <term>
+                                            <keyword> false </keyword>
+                                        </term>
+                                    </expression>
+                                    <symbol> ; </symbol>
+                                </returnStatement>
+                            </statements>
+                            <symbol> } </symbol>
+                            <keyword> else </keyword>
+                            <symbol> { </symbol>
+                            <statements>
+                                <letStatement>
+                                    <keyword> let </keyword>
+                                    <identifier> posY </identifier>
+                                    <symbol> = </symbol>
+                                    <expression>
+                                        <term>
+                                            <identifier> posY </identifier>
+                                        </term>
+                                        <symbol> + </symbol>
+                                        <term>
+                                            <integerConstant> 1 </integerConstant>
+                                        </term>
+                                    </expression>
+                                    <symbol> ; </symbol>
+                                </letStatement>
+                            </statements>
+                            <symbol> } </symbol>
+                        </ifStatement>
+                    </statements>
+                    <symbol> } </symbol>
+                </ifStatement>
+                <ifStatement>
+                    <keyword> if </keyword>
+                    <symbol> ( </symbol>
+                    <expression>
+                        <term>
+                            <identifier> dir </identifier>
+                        </term>
+                        <symbol> = </symbol>
+                        <term>
+                            <integerConstant> 3 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ) </symbol>
+                    <symbol> { </symbol>
+                    <statements>
+                        <ifStatement>
+                            <keyword> if </keyword>
+                            <symbol> ( </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> posX </identifier>
+                                </term>
+                                <symbol> = </symbol>
+                                <term>
+                                    <integerConstant> 0 </integerConstant>
+                                </term>
+                            </expression>
+                            <symbol> ) </symbol>
+                            <symbol> { </symbol>
+                            <statements>
+                                <returnStatement>
+                                    <keyword> return </keyword>
+                                    <expression>
+                                        <term>
+                                            <keyword> false </keyword>
+                                        </term>
+                                    </expression>
+                                    <symbol> ; </symbol>
+                                </returnStatement>
+                            </statements>
+                            <symbol> } </symbol>
+                            <keyword> else </keyword>
+                            <symbol> { </symbol>
+                            <statements>
+                                <letStatement>
+                                    <keyword> let </keyword>
+                                    <identifier> posX </identifier>
+                                    <symbol> = </symbol>
+                                    <expression>
+                                        <term>
+                                            <identifier> posX </identifier>
+                                        </term>
+                                        <symbol> - </symbol>
+                                        <term>
+                                            <integerConstant> 1 </integerConstant>
+                                        </term>
+                                    </expression>
+                                    <symbol> ; </symbol>
+                                </letStatement>
+                            </statements>
+                            <symbol> } </symbol>
+                        </ifStatement>
+                    </statements>
+                    <symbol> } </symbol>
+                </ifStatement>
+                <ifStatement>
+                    <keyword> if </keyword>
+                    <symbol> ( </symbol>
+                    <expression>
+                        <term>
+                            <identifier> dir </identifier>
+                        </term>
+                        <symbol> = </symbol>
+                        <term>
+                            <integerConstant> 4 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ) </symbol>
+                    <symbol> { </symbol>
+                    <statements>
+                        <ifStatement>
+                            <keyword> if </keyword>
+                            <symbol> ( </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> posX </identifier>
+                                </term>
+                                <symbol> = </symbol>
+                                <term>
+                                    <identifier> grid </identifier>
+                                    <symbol> . </symbol>
+                                    <identifier> sizeX </identifier>
+                                    <symbol> ( </symbol>
+                                    <expressionList></expressionList>
+                                    <symbol> ) </symbol>
+                                </term>
+                            </expression>
+                            <symbol> ) </symbol>
+                            <symbol> { </symbol>
+                            <statements>
+                                <returnStatement>
+                                    <keyword> return </keyword>
+                                    <expression>
+                                        <term>
+                                            <keyword> false </keyword>
+                                        </term>
+                                    </expression>
+                                    <symbol> ; </symbol>
+                                </returnStatement>
+                            </statements>
+                            <symbol> } </symbol>
+                            <keyword> else </keyword>
+                            <symbol> { </symbol>
+                            <statements>
+                                <letStatement>
+                                    <keyword> let </keyword>
+                                    <identifier> posX </identifier>
+                                    <symbol> = </symbol>
+                                    <expression>
+                                        <term>
+                                            <identifier> posX </identifier>
+                                        </term>
+                                        <symbol> + </symbol>
+                                        <term>
+                                            <integerConstant> 1 </integerConstant>
+                                        </term>
+                                    </expression>
+                                    <symbol> ; </symbol>
+                                </letStatement>
+                            </statements>
+                            <symbol> } </symbol>
+                        </ifStatement>
+                    </statements>
+                    <symbol> } </symbol>
+                </ifStatement>
+                <ifStatement>
+                    <keyword> if </keyword>
+                    <symbol> ( </symbol>
+                    <expression>
+                        <term>
+                            <identifier> grid </identifier>
+                            <symbol> . </symbol>
+                            <identifier> checkOccupied </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList>
+                                <expression>
+                                    <term>
+                                        <identifier> posX </identifier>
+                                    </term>
+                                </expression>
+                                <symbol> , </symbol>
+                                <expression>
+                                    <term>
+                                        <identifier> posY </identifier>
+                                    </term>
+                                </expression>
+                            </expressionList>
+                            <symbol> ) </symbol>
+                        </term>
+                    </expression>
+                    <symbol> ) </symbol>
+                    <symbol> { </symbol>
+                    <statements>
+                        <returnStatement>
+                            <keyword> return </keyword>
+                            <expression>
+                                <term>
+                                    <keyword> false </keyword>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </returnStatement>
+                    </statements>
+                    <symbol> } </symbol>
+                </ifStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <expression>
+                        <term>
+                            <keyword> true </keyword>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> void </keyword>
+        <identifier> grow </identifier>
+        <symbol> ( </symbol>
+        <parameterList>
+            <keyword> int </keyword>
+            <identifier> cycle </identifier>
+        </parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <doStatement>
+                    <keyword> do </keyword>
+                    <identifier> drawHead </identifier>
+                    <symbol> ( </symbol>
+                    <expressionList>
+                        <expression>
+                            <term>
+                                <identifier> cycle </identifier>
+                            </term>
+                        </expression>
+                    </expressionList>
+                    <symbol> ) </symbol>
+                    <symbol> ; </symbol>
+                </doStatement>
+                <ifStatement>
+                    <keyword> if </keyword>
+                    <symbol> ( </symbol>
+                    <expression>
+                        <term>
+                            <identifier> togrow </identifier>
+                        </term>
+                        <symbol> &gt; </symbol>
+                        <term>
+                            <integerConstant> 0 </integerConstant>
+                        </term>
+                    </expression>
+                    <symbol> ) </symbol>
+                    <symbol> { </symbol>
+                    <statements>
+                        <letStatement>
+                            <keyword> let </keyword>
+                            <identifier> togrow </identifier>
+                            <symbol> = </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> togrow </identifier>
+                                </term>
+                                <symbol> - </symbol>
+                                <term>
+                                    <integerConstant> 1 </integerConstant>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </letStatement>
+                        <letStatement>
+                            <keyword> let </keyword>
+                            <identifier> length </identifier>
+                            <symbol> = </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> length </identifier>
+                                </term>
+                                <symbol> + </symbol>
+                                <term>
+                                    <integerConstant> 1 </integerConstant>
+                                </term>
+                            </expression>
+                            <symbol> ; </symbol>
+                        </letStatement>
+                    </statements>
+                    <symbol> } </symbol>
+                    <keyword> else </keyword>
+                    <symbol> { </symbol>
+                    <statements>
+                        <doStatement>
+                            <keyword> do </keyword>
+                            <identifier> clearTail </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList>
+                                <expression>
+                                    <term>
+                                        <identifier> cycle </identifier>
+                                    </term>
+                                </expression>
+                            </expressionList>
+                            <symbol> ) </symbol>
+                            <symbol> ; </symbol>
+                        </doStatement>
+                    </statements>
+                    <symbol> } </symbol>
+                </ifStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> void </keyword>
+        <identifier> drawHead </identifier>
+        <symbol> ( </symbol>
+        <parameterList>
+            <keyword> int </keyword>
+            <identifier> cycle </identifier>
+        </parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <varDec>
+                <keyword> var </keyword>
+                <identifier> SnakeGrid </identifier>
+                <identifier> grid </identifier>
+                <symbol> ; </symbol>
+            </varDec>
+            <statements>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> grid </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> game </identifier>
+                            <symbol> . </symbol>
+                            <identifier> getGrid </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList></expressionList>
+                            <symbol> ) </symbol>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <doStatement>
+                    <keyword> do </keyword>
+                    <identifier> grid </identifier>
+                    <symbol> . </symbol>
+                    <identifier> drawSnakeBit </identifier>
+                    <symbol> ( </symbol>
+                    <expressionList>
+                        <expression>
+                            <term>
+                                <identifier> posX </identifier>
+                            </term>
+                        </expression>
+                        <symbol> , </symbol>
+                        <expression>
+                            <term>
+                                <identifier> posY </identifier>
+                            </term>
+                        </expression>
+                    </expressionList>
+                    <symbol> ) </symbol>
+                    <symbol> ; </symbol>
+                </doStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> histX </identifier>
+                    <symbol> [ </symbol>
+                    <expression>
+                        <term>
+                            <identifier> cycle </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ] </symbol>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> posX </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> histY </identifier>
+                    <symbol> [ </symbol>
+                    <expression>
+                        <term>
+                            <identifier> cycle </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ] </symbol>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> posY </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> void </keyword>
+        <identifier> clearTail </identifier>
+        <symbol> ( </symbol>
+        <parameterList>
+            <keyword> int </keyword>
+            <identifier> cycle </identifier>
+        </parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <varDec>
+                <keyword> var </keyword>
+                <identifier> SnakeGrid </identifier>
+                <identifier> grid </identifier>
+                <symbol> ; </symbol>
+            </varDec>
+            <varDec>
+                <keyword> var </keyword>
+                <keyword> int </keyword>
+                <identifier> tailIndex </identifier>
+                <symbol> , </symbol>
+                <identifier> tailX </identifier>
+                <symbol> , </symbol>
+                <identifier> tailY </identifier>
+                <symbol> ; </symbol>
+            </varDec>
+            <statements>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> tailIndex </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> cycle </identifier>
+                        </term>
+                        <symbol> - </symbol>
+                        <term>
+                            <identifier> length </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> tailX </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> histX </identifier>
+                            <symbol> [ </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> tailIndex </identifier>
+                                </term>
+                            </expression>
+                            <symbol> ] </symbol>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> tailY </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> histY </identifier>
+                            <symbol> [ </symbol>
+                            <expression>
+                                <term>
+                                    <identifier> tailIndex </identifier>
+                                </term>
+                            </expression>
+                            <symbol> ] </symbol>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> grid </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> game </identifier>
+                            <symbol> . </symbol>
+                            <identifier> getGrid </identifier>
+                            <symbol> ( </symbol>
+                            <expressionList></expressionList>
+                            <symbol> ) </symbol>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <doStatement>
+                    <keyword> do </keyword>
+                    <identifier> grid </identifier>
+                    <symbol> . </symbol>
+                    <identifier> clearSnakeBit </identifier>
+                    <symbol> ( </symbol>
+                    <expressionList>
+                        <expression>
+                            <term>
+                                <identifier> tailX </identifier>
+                            </term>
+                        </expression>
+                        <symbol> , </symbol>
+                        <expression>
+                            <term>
+                                <identifier> tailY </identifier>
+                            </term>
+                        </expression>
+                    </expressionList>
+                    <symbol> ) </symbol>
+                    <symbol> ; </symbol>
+                </doStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <subroutineDec>
+        <keyword> method </keyword>
+        <keyword> void </keyword>
+        <identifier> eatFood </identifier>
+        <symbol> ( </symbol>
+        <parameterList></parameterList>
+        <symbol> ) </symbol>
+        <subroutineBody>
+            <symbol> { </symbol>
+            <statements>
+                <letStatement>
+                    <keyword> let </keyword>
+                    <identifier> togrow </identifier>
+                    <symbol> = </symbol>
+                    <expression>
+                        <term>
+                            <identifier> togrow </identifier>
+                        </term>
+                        <symbol> + </symbol>
+                        <term>
+                            <identifier> growby </identifier>
+                        </term>
+                    </expression>
+                    <symbol> ; </symbol>
+                </letStatement>
+                <returnStatement>
+                    <keyword> return </keyword>
+                    <symbol> ; </symbol>
+                </returnStatement>
+            </statements>
+            <symbol> } </symbol>
+        </subroutineBody>
+    </subroutineDec>
+    <symbol> } </symbol>
+</class>

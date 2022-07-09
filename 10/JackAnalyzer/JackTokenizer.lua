@@ -1,4 +1,4 @@
-require "JackConstant"
+require "10/JackAnalyzer/JackConstant"
 -- tokens - table of all tokens
 -- tokenType - type of the current token
 -- val - value of the current token
@@ -53,20 +53,27 @@ function JackTokenizer:writeXml()
 
     self:writeStartTag(tokenType[tok])
 
-    if tok == T_KEYWORD then
-        self.outfile:write(self:keyWord())
-    elseif tok == T_SYM then
-        self.outfile:write((self:symbol()))
-    elseif tok == T_NUM then
-        self.outfile:write(self:intVal())
-    elseif tok == T_STR then
-        self.outfile:write(self:stringVal())
-    elseif tok == T_ID then
-        self.outfile:write(self:identifier())
-    elseif tok == T_ERROR then
+    if tok == T_ERROR then
         self.outfile:write("<<ERRORR>>")
     end
+    if tok == T_SYM then
+        self.outfile:write(self:escape(self.val))
+    else
+        self.outfile:write(self.val)
+    end
     self:writeEndTag(tokenType[tok])
+end
+
+function JackTokenizer:escape(val)
+    if val == '<' then
+        return "&lt;"
+    elseif val == ">" then
+        return "&gt;"
+    elseif val == "&" then
+        return "&amp;"
+    else
+        return val
+    end
 end
 
 function JackTokenizer:writeStartTag(token) self.outfile:write("<" .. token .. ">") end
@@ -74,18 +81,6 @@ function JackTokenizer:writeStartTag(token) self.outfile:write("<" .. token .. "
 function JackTokenizer:writeEndTag(token)
     self.outfile:write("</" .. token .. ">\n")
 end
-
-function JackTokenizer:tokenType() return self.tokenType end
-
-function JackTokenizer:keyWord() return self.val end
-
-function JackTokenizer:symbol() return self.val end
-
-function JackTokenizer:identifier() return self.val end
-
-function JackTokenizer:intVal() return self.val end
-
-function JackTokenizer:stringVal() return self.val end
 
 function JackTokenizer:tokenize(lines)
     local t = {}

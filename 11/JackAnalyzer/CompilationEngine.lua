@@ -1,7 +1,7 @@
-require "JackTokenizer"
-require "JackConstant"
-require "SymbolTable"
-require "VMWriter"
+require "11/JackAnalyzer/JackTokenizer"
+require "11/JackAnalyzer/JackConstant"
+require "11/JackAnalyzer/SymbolTable"
+require "11/JackAnalyzer/VMWriter"
 CompilationEngine = {
     tokenizer = nil,
     vm = nil,
