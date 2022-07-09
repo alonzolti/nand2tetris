@@ -10,6 +10,7 @@ function VMTranslator:new()
     return t
 end
 
+--translate all vm files
 function VMTranslator:translateAll(infiles, outFile)
     if infiles ~= nil then
         local codeWriter = CodeWriter:new(outFile) 
@@ -23,6 +24,7 @@ function VMTranslator:translateAll(infiles, outFile)
     end
 end
 
+--going through all the commands in the file
 function VMTranslator:translate(file, codeWriter)
     local parser = Parser:new(file)
     codeWriter:setFileName(file)
@@ -32,6 +34,7 @@ function VMTranslator:translate(file, codeWriter)
     end
 end
 
+--generating asm code from vm
 function VMTranslator:genCode(parser, codeWriter)
     local cmd = parser:commandType()
     if cmd == C_ARITHMETIC then
@@ -64,7 +67,7 @@ function main()
             t = {arg[1]}
             fileOutPath = arg[1]:gsub('.vm','.asm')
         else -- if it is a directory
-            t = scandir(arg[1])
+            t = Scandir(arg[1])
             fileOutPath = arg[1] .. '/' .. arg[1]:sub(string.find(arg[1],'\\[^\\]*$')+1)..'.asm'
         end
         local translator = VMTranslator:new()
@@ -73,10 +76,13 @@ function main()
 end
 
 --find all the vm files in the directory
-function scandir(directory)
+function Scandir(directory)
     local i, t, popen = 0, {}, io.popen
     --for linux - 'ls -a "' .. directory .. '"'    
     local pfile = popen('dir "'..directory..'" /b /a')
+    if pfile == nil then
+        error("directory isn't exist")
+    end
     for filename in pfile:lines() do 
         if string.match(filename, '.vm') then
             i = i + 1

@@ -1,4 +1,4 @@
--- VM translator constants
+-- VM translator constants tokens
 NUM = 1
 ID = 2
 ERROR = 3

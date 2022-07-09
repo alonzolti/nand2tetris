@@ -1,6 +1,7 @@
 require "08\\VMtranslator\\VMTokenizer"
 require "08\\VMtranslator\\VMconstant"
 
+
 Parser = {tokenizer = nil, cmdType = C_ERROR, arg1 = '', arg2 = 0}
 
 function Parser:new(file)
