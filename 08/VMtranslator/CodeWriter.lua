@@ -71,6 +71,7 @@ function CodeWriter:writeCall(funcName, numArgs)
     local retAdd = self:newLabel()
     self:push(S_CONST, retAdd)
     self:push(S_REG, R_LCL)
+    self:push(S_REG, R_ARG)
     self:push(S_REG, R_THIS)
     self:push(S_REG, R_THAT)
     self:loadSpOffset(-numArgs - 5)
@@ -116,7 +117,7 @@ end
 
 function CodeWriter:push(seg, index)
     if self:isConstSeg(seg) then
-        self:valToStack(index)
+        self:valToStack(tostring(index))
     elseif self:isMemSeg(seg) then
         self:memToStack(self:asmMemSeg(seg),index,true)
     elseif self:isRegSeg(seg) then
@@ -284,7 +285,7 @@ function CodeWriter:loadSegIndex(seg,index,indir)
         index = -index
         comp = 'A-D'
     end
-    self:aCommand(index)
+    self:aCommand(tostring(index))
     self:cCommand('D','A')
     self:aCommand(seg)
     if indir then self:indir('A')end
