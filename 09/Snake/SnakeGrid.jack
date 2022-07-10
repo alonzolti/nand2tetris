@@ -107,9 +107,7 @@ class SnakeGrid {
         // area from the status line
         do Screen.setColor(true);
         do Screen.drawLine(0, (sizeY*4)+1, (sizeX*4-1), (sizeY*4)+1);
-
         return;
-
     }
 
     // reader methods
@@ -251,18 +249,13 @@ class SnakeGrid {
         return;
 
     }
+    
     method void drawCrashed() {
-
         var String tString;
-
         do Output.moveCursor(22, 12);
         let tString = "*CRASHED*";
         do Output.printString(tString);
         do tString.dispose();
-
         return;
-
     }
-
-
 }

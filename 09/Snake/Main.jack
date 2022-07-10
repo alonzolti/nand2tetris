@@ -1,5 +1,4 @@
 class Main {
-
     function void main() {
         var SnakeGame game;
         let game = SnakeGame.new();
@@ -7,5 +6,4 @@ class Main {
 	    do game.dispose();
         return;
     }
-
 }
