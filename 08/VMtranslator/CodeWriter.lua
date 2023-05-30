@@ -1,12 +1,12 @@
 CodeWriter = { outFile = nil, vmFile = '', labelNum = 0 }
 
 function CodeWriter:new(file)
-    local t = {}
-    setmetatable(t, CodeWriter)
+    local codeWriter = {}
+    setmetatable(codeWriter, CodeWriter)
     self.__index = self
-    t.vmFile = ''
-    t.outFile = io.open(file, "w")
-    return t
+    codeWriter.vmFile = ''
+    codeWriter.outFile = io.open(file, "w")
+    return codeWriter
 end
 
 function CodeWriter:setFileName(file)

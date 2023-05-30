@@ -3,15 +3,15 @@ require "10/JackAnalyzer/JackConstant"
 -- tokenType - type of the current token
 -- val - value of the current token
 -- outfile - xml file to translate the jack code into
-JackTokenizer = {tokens = nil, tokenType = T_ERROR, val = 0, outfile = nil}
+JackTokenizer = { tokens = nil, tokenType = T_ERROR, val = 0, outfile = nil }
 
 function JackTokenizer:new(file)
-    local t = {}
-    setmetatable(t, JackTokenizer)
+    local tokenizer = {}
+    setmetatable(tokenizer, JackTokenizer)
     self.__index = self
-    t.cfile = io.open(file, 'r')
-    t.tokens = t:tokenize(t.cfile:read("*a"))
-    return t
+    tokenizer.cfile = io.open(file, 'r')
+    tokenizer.tokens = tokenizer:tokenize(tokenizer.cfile:read("*a"))
+    return tokenizer
 end
 
 function JackTokenizer:openOut(file)
@@ -41,7 +41,7 @@ end
 
 function JackTokenizer:peek()
     if self:hasMoreToken() then
-        return self.tokens[1][1],self.tokens[1][2]
+        return self.tokens[1][1], self.tokens[1][2]
     else
         return T_ERROR, 0
     end
@@ -100,7 +100,7 @@ function JackTokenizer:split(line)
     local ans = {}
     while line ~= nil do
         local help = true
-        for v, w in pairs(keywords) do
+        for v, w in pairs(Keywords) do
             if self:starts(line, w) and help then
                 table.insert(ans, string.sub(line, 1, w:len()))
                 line = string.sub(line, w:len() + 1)
@@ -125,7 +125,7 @@ function JackTokenizer:split(line)
             help = false
         elseif firstChar == '"' and help == true then
             local nextQuote = string.find(line, '"', 2)
-            local currentToken = string.sub(line,1, nextQuote)
+            local currentToken = string.sub(line, 1, nextQuote)
             table.insert(ans, currentToken)
             line = string.sub(line, nextQuote + 1)
             help = false
@@ -144,38 +144,39 @@ function JackTokenizer:split(line)
 end
 
 function JackTokenizer:starts(String, prefix)
-    return string.sub(String, 1, string.len(prefix)) == prefix and string.match(string.sub(String, prefix:len() + 1, prefix:len() + 1), '%s') ~=nil
+    return string.sub(String, 1, string.len(prefix)) == prefix and
+    string.match(string.sub(String, prefix:len() + 1, prefix:len() + 1), '%s') ~= nil
 end
 
 function JackTokenizer:token(word)
     if self:isKeyWord(word) then
-        return {T_KEYWORD, word}
+        return { T_KEYWORD, word }
     elseif self:isSym(word) then
-        return {T_SYM, word}
+        return { T_SYM, word }
     elseif self:isNum(word) then
-        return {T_NUM, word}
+        return { T_NUM, word }
     elseif self:isStr(word) then
-        return {T_STR, word:sub(2, word:len() - 1)}
+        return { T_STR, word:sub(2, word:len() - 1) }
     elseif self:isId(word) then
-        return {T_ID, word}
+        return { T_ID, word }
     else
-        return {T_ERROR, word}
+        return { T_ERROR, word }
     end
 end
 
 function JackTokenizer:isKeyWord(word)
-    for v, w in pairs(keywords) do if word == w then return true end end
+    for v, w in pairs(Keywords) do if word == w then return true end end
     return false
 end
 
 function JackTokenizer:isSym(word)
-    for v, s in pairs(symbols) do if s == word then return true end end
+    for _, s in pairs(symbols) do if s == word then return true end end
 end
 
 function JackTokenizer:isNum(word) return tonumber(word) ~= nil end
 
-function JackTokenizer:isStr(word) 
-    return word:sub(1,1) == '"' and word:find('"',2) ~= nil 
+function JackTokenizer:isStr(word)
+    return word:sub(1, 1) == '"' and word:find('"', 2) ~= nil
 end
 
 function JackTokenizer:isId(word)

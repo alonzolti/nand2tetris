@@ -1,23 +1,16 @@
-require "08\\VMtranslator\\CodeWriter"
-require "08\\VMtranslator\\Parser"
-require "08\\VMtranslator\\VMconstant"
-VMTranslator = {}
-
-function VMTranslator:new()
-    local t = {}
-    setmetatable(t, VMTranslator)
-    self.__index = self
-    return t
-end
+package.path = package.path .. ";" .. io.popen("cd"):read() .. arg[0]:sub(2, string.find(arg[0], '\\[^\\]*$')) .. "?.lua"
+require "CodeWriter"
+require "Parser"
+require "VMconstant"
 
 --translate all vm files
-function VMTranslator:translateAll(infiles, outFile)
+function TranslateAll(infiles, outFile)
     if infiles ~= nil then
-        local codeWriter = CodeWriter:new(outFile) 
+        local codeWriter = CodeWriter:new(outFile)
         codeWriter:writeInit()
         for _, file in pairs(infiles) do
             if file:match(".vm") then
-                self:translate(file, codeWriter)
+                Translate(file, codeWriter)
             end
         end
         codeWriter:closeFile()
@@ -25,17 +18,17 @@ function VMTranslator:translateAll(infiles, outFile)
 end
 
 --going through all the commands in the file
-function VMTranslator:translate(file, codeWriter)
+function Translate(file, codeWriter)
     local parser = Parser:new(file)
     codeWriter:setFileName(file)
     while parser:hasMoreCommands() do
         parser:advance()
-        self:genCode(parser, codeWriter)
+        GenCode(parser, codeWriter)
     end
 end
 
 --generating asm code from vm
-function VMTranslator:genCode(parser, codeWriter)
+function GenCode(parser, codeWriter)
     local cmd = parser:commandType()
     if cmd == C_ARITHMETIC then
         codeWriter:writeArithmetic(parser:argF())
@@ -56,40 +49,39 @@ function VMTranslator:genCode(parser, codeWriter)
     end
 end
 
-
 function main()
     if (arg[1] == nil or arg[2] ~= nil) then
         print("Wrong number of parameters")
-    else
-        local t = {}
-        local fileOutPath
-        if string.match(arg[1], '.vm') then -- if it is a file
-            t = {arg[1]}
-            fileOutPath = arg[1]:gsub('.vm','.asm')
-        else -- if it is a directory
-            t = Scandir(arg[1])
-            fileOutPath = arg[1] .. '/' .. arg[1]:sub(string.find(arg[1],'\\[^\\]*$')+1)..'.asm'
-        end
-        local translator = VMTranslator:new()
-        translator:translateAll(t,fileOutPath)
+        os.exit()
     end
+    local files = {}
+    local fileOutPath
+    -- if it is a file
+    if string.match(arg[1], '.vm') then
+        files = { arg[1] }
+        fileOutPath = arg[1]:gsub('.vm', '.asm')
+    -- if it is a directory
+    else
+        files = Scandir(arg[1])
+        fileOutPath = arg[1] .. '/' .. arg[1]:sub(string.find(arg[1], '\\[^\\]*$') + 1) .. '.asm'
+    end
+    TranslateAll(files, fileOutPath)
 end
 
 --find all the vm files in the directory
 function Scandir(directory)
-    local i, t, popen = 0, {}, io.popen
-    --for linux - 'ls -a "' .. directory .. '"'    
-    local pfile = popen('dir "'..directory..'" /b /a')
+    local VMfiles = {}
+    --for linux - 'ls -a "' .. directory .. '"'
+    local pfile = io.popen('dir "' .. directory .. '" /b /a')
     if pfile == nil then
         error("directory isn't exist")
     end
-    for filename in pfile:lines() do 
+    for filename in pfile:lines() do
         if string.match(filename, '.vm') then
-            i = i + 1
-            t[i] = directory.. '\\' .. filename
+            table.insert(VMfiles, directory .. '\\' .. filename)
         end
-    end    
+    end
     pfile:close()
-    return t
+    return VMfiles
 end
 main()

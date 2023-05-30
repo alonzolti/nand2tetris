@@ -4,5 +4,8 @@
         "commandType",
         "a",
         "c"
+    ],
+    "Lua.diagnostics.disable": [
+        "duplicate-set-field"
     ]
 }

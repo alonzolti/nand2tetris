@@ -1,23 +1,25 @@
-require "08\\VMtranslator\\VMconstant"
+require "VMconstant"
 
-VMTokenizer = { tokens = {}, --list of all tokens
-    curCommand = {}, --list of tokens for current command
-    curToken = { ERROR, 0 } } --current token of current command
+VMTokenizer = {
+    tokens = {},            --list of all commands and 
+    curCommand = {},        --list of tokens for current command
+    curToken = { ERROR, 0 } --current token of current command
+}
 
 function VMTokenizer:new(file)
-    local t = {}
-    setmetatable(t, VMTokenizer)
+    local tokenizer = {}
+    setmetatable(tokenizer, VMTokenizer)
     self.__index = self
     local rFile = io.open(file, 'r')
     if rFile == nil then
         error('file ' .. file .. ' not found\n')
     end
     --read all the lines and split it into separate strings
-    t:tokenize(rFile:read('*a'):gmatch("[^\r\n]+"))
-    return t
+    tokenizer:tokenize(rFile:lines())
+    return tokenizer
 end
 
---are there more commands in the file
+--are there more commands in the list
 function VMTokenizer:hasMoreCommands() return self.tokens[1] ~= nil end
 
 --move to the next command
@@ -57,12 +59,12 @@ end
 
 --tokenize a specific line
 function VMTokenizer:tokenizeLine(line)
-    local b = {}
+    local lineTok = {}
     for word in string.gmatch(self:removeComments(line), "%S+") do
-        table.insert(b, self:token(word))
+        table.insert(lineTok, self:token(word))
     end
-    if b[1] ~= nil then
-        table.insert(self.tokens, b)
+    if lineTok[1] ~= nil then
+        table.insert(self.tokens, lineTok)
     end
 end
 
