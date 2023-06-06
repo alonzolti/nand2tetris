@@ -1,4 +1,4 @@
-require "10/JackAnalyzer/JackConstant"
+require "JackConstant"
 -- tokens - table of all tokens
 -- tokenType - type of the current token
 -- val - value of the current token
@@ -9,8 +9,13 @@ function JackTokenizer:new(file)
     local tokenizer = {}
     setmetatable(tokenizer, JackTokenizer)
     self.__index = self
-    tokenizer.cfile = io.open(file, 'r')
-    tokenizer.tokens = tokenizer:tokenize(tokenizer.cfile:read("*a"))
+    print(file)
+    local cfile = io.open(file, 'r')
+    if cfile == nil then
+        return error("file" .. file .. " isn't exist\n")
+    end
+    tokenizer.tokens = tokenizer:tokenize(cfile:read("*a"))
+
     return tokenizer
 end
 
@@ -28,8 +33,7 @@ function JackTokenizer:hasMoreToken() return self.tokens[1] ~= nil end
 
 function JackTokenizer:advance()
     if self:hasMoreToken() then
-        self.tokenType = self.tokens[1][1]
-        self.val = self.tokens[1][2]
+        self.tokenType, self.val = self.tokens[1][1], self.tokens[1][2]
         table.remove(self.tokens, 1)
     else
         self.tokenType = T_ERROR
@@ -48,20 +52,16 @@ function JackTokenizer:peek()
 end
 
 function JackTokenizer:writeXml()
-    local tok = self.tokenType
-    local val = self.val
-
-    self:writeStartTag(tokenType[tok])
-
-    if tok == T_ERROR then
+    self:writeStartTag(TokenType[self.tokenType])
+    if self.tokenType == T_ERROR then
         self.outfile:write("<<ERRORR>>")
     end
-    if tok == T_SYM then
+    if self.tokenType == T_SYM then
         self.outfile:write(self:escape(self.val))
     else
         self.outfile:write(self.val)
     end
-    self:writeEndTag(tokenType[tok])
+    self:writeEndTag(TokenType[self.tokenType])
 end
 
 function JackTokenizer:escape(val)
@@ -83,11 +83,11 @@ function JackTokenizer:writeEndTag(token)
 end
 
 function JackTokenizer:tokenize(lines)
-    local t = {}
-    for k, w in pairs(self:split(self:removeComments(lines))) do
-        table.insert(t, self:token(w))
+    local words = {}
+    for _, w in pairs(self:split(self:removeComments(lines))) do
+        table.insert(words, self:token(w))
     end
-    return t
+    return words
 end
 
 function JackTokenizer:removeComments(line)
@@ -96,10 +96,12 @@ function JackTokenizer:removeComments(line)
     return lines
 end
 
+--the function converts a line into tokens
 function JackTokenizer:split(line)
     local ans = {}
     while line ~= nil do
         local help = true
+        --if the first word is a keyword
         for v, w in pairs(Keywords) do
             if self:starts(line, w) and help then
                 table.insert(ans, string.sub(line, 1, w:len()))
@@ -107,8 +109,9 @@ function JackTokenizer:split(line)
                 help = false
             end
         end
+        --if the first char is a symbol
         local firstChar = string.sub(line, 1, 1)
-        for v, s in pairs(symbols) do
+        for v, s in pairs(Symbols) do
             if s == firstChar and help then
                 table.insert(ans, s)
                 line = string.sub(line, 2)
@@ -145,7 +148,7 @@ end
 
 function JackTokenizer:starts(String, prefix)
     return string.sub(String, 1, string.len(prefix)) == prefix and
-    string.match(string.sub(String, prefix:len() + 1, prefix:len() + 1), '%s') ~= nil
+        string.match(string.sub(String, prefix:len() + 1, prefix:len() + 1), '%s') ~= nil
 end
 
 function JackTokenizer:token(word)
@@ -165,12 +168,13 @@ function JackTokenizer:token(word)
 end
 
 function JackTokenizer:isKeyWord(word)
-    for v, w in pairs(Keywords) do if word == w then return true end end
+    for _, w in pairs(Keywords) do if word == w then return true end end
     return false
 end
 
 function JackTokenizer:isSym(word)
-    for _, s in pairs(symbols) do if s == word then return true end end
+    for _, s in pairs(Symbols) do if s == word then return true end end
+    return false
 end
 
 function JackTokenizer:isNum(word) return tonumber(word) ~= nil end

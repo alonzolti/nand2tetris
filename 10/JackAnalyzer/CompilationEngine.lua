@@ -1,25 +1,24 @@
-require "10/JackAnalyzer/JackTokenizer"
-require "10/JackAnalyzer/JackConstant"
+require "JackTokenizer"
+require "JackConstant"
 CompilationEngine = { tokenizer = nil, outfile = nil, parsedRules = {} }
 
 function CompilationEngine:new(file)
-    local t = {}
-    setmetatable(t, CompilationEngine)
+    local compiler = {}
+    setmetatable(compiler, CompilationEngine)
     self.__index = self
-    t.tokenizer = JackTokenizer:new(file)
-    t:openOut(file)
-    t:compileClass()
-    t:closeOut()
-    return t
+    compiler.tokenizer = JackTokenizer:new(file)
+    compiler:openOut(file)
+    compiler:compileClass()
+    compiler:closeOut()
+    return compiler
 end
 
 function CompilationEngine:require(tok, val)
     local curTok, curVal = self:advance()
     if tok ~= curTok or ((tok == T_KEYWORD or tok == T_SYM) and val ~= curVal) then
         error()
-    else
-        return curVal
     end
+    return curVal
 end
 
 function CompilationEngine:advance()
@@ -29,7 +28,6 @@ function CompilationEngine:advance()
 end
 
 function CompilationEngine:isToken(tok, val)
-
     local nextTok, nextVal = self.tokenizer:peek()
     if (val == nil) then
         return nextTok == tok
@@ -49,11 +47,11 @@ function CompilationEngine:closeOut()
 end
 
 function CompilationEngine:writeTerminal(tok, val)
-    self.outfile:write("<" .. tokenType[tok] .. '> ' .. escape(val) .. ' </' ..
-        tokenType[tok] .. '>\n')
+    self.outfile:write("<" .. TokenType[tok] .. '> ' .. self:escape(val) .. ' </' ..
+        TokenType[tok] .. '>\n')
 end
 
-function escape(val)
+function CompilationEngine:escape(val)
     if val == '<' then
         return "&lt;"
     elseif val == ">" then

@@ -1,28 +1,28 @@
 <tokens>
-    <keyword>1</keyword>
+    <keyword>class</keyword>
     <identifier>Main</identifier>
     <symbol>{</symbol>
-    <keyword>1</keyword>
-    <keyword>1</keyword>
+    <keyword>function</keyword>
+    <keyword>void</keyword>
     <identifier>main</identifier>
     <symbol>(</symbol>
     <symbol>)</symbol>
     <symbol>{</symbol>
-    <keyword>1</keyword>
+    <keyword>var</keyword>
     <identifier>Array</identifier>
     <identifier>a</identifier>
     <symbol>;</symbol>
-    <keyword>1</keyword>
-    <keyword>1</keyword>
+    <keyword>var</keyword>
+    <keyword>int</keyword>
     <identifier>length</identifier>
     <symbol>;</symbol>
-    <keyword>1</keyword>
-    <keyword>1</keyword>
+    <keyword>var</keyword>
+    <keyword>int</keyword>
     <identifier>i</identifier>
     <symbol>,</symbol>
     <identifier>sum</identifier>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>let</keyword>
     <identifier>length</identifier>
     <symbol>=</symbol>
     <identifier>Keyboard</identifier>
@@ -32,7 +32,7 @@
     <stringConstant>HOW MANY NUMBERS? </stringConstant>
     <symbol>)</symbol>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>let</keyword>
     <identifier>a</identifier>
     <symbol>=</symbol>
     <identifier>Array</identifier>
@@ -42,19 +42,19 @@
     <identifier>length</identifier>
     <symbol>)</symbol>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>let</keyword>
     <identifier>i</identifier>
     <symbol>=</symbol>
     <integerConstant>0</integerConstant>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>while</keyword>
     <symbol>(</symbol>
     <identifier>i</identifier>
     <symbol>&lt;</symbol>
     <identifier>length</identifier>
     <symbol>)</symbol>
     <symbol>{</symbol>
-    <keyword>1</keyword>
+    <keyword>let</keyword>
     <identifier>a</identifier>
     <symbol>[</symbol>
     <identifier>i</identifier>
@@ -67,7 +67,7 @@
     <stringConstant>ENTER THE NEXT NUMBER: </stringConstant>
     <symbol>)</symbol>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>let</keyword>
     <identifier>i</identifier>
     <symbol>=</symbol>
     <identifier>i</identifier>
@@ -75,24 +75,24 @@
     <integerConstant>1</integerConstant>
     <symbol>;</symbol>
     <symbol>}</symbol>
-    <keyword>1</keyword>
+    <keyword>let</keyword>
     <identifier>i</identifier>
     <symbol>=</symbol>
     <integerConstant>0</integerConstant>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>let</keyword>
     <identifier>sum</identifier>
     <symbol>=</symbol>
     <integerConstant>0</integerConstant>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>while</keyword>
     <symbol>(</symbol>
     <identifier>i</identifier>
     <symbol>&lt;</symbol>
     <identifier>length</identifier>
     <symbol>)</symbol>
     <symbol>{</symbol>
-    <keyword>1</keyword>
+    <keyword>let</keyword>
     <identifier>sum</identifier>
     <symbol>=</symbol>
     <identifier>sum</identifier>
@@ -102,7 +102,7 @@
     <identifier>i</identifier>
     <symbol>]</symbol>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>let</keyword>
     <identifier>i</identifier>
     <symbol>=</symbol>
     <identifier>i</identifier>
@@ -110,7 +110,7 @@
     <integerConstant>1</integerConstant>
     <symbol>;</symbol>
     <symbol>}</symbol>
-    <keyword>1</keyword>
+    <keyword>do</keyword>
     <identifier>Output</identifier>
     <symbol>.</symbol>
     <identifier>printString</identifier>
@@ -118,7 +118,7 @@
     <stringConstant>THE AVERAGE IS: </stringConstant>
     <symbol>)</symbol>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>do</keyword>
     <identifier>Output</identifier>
     <symbol>.</symbol>
     <identifier>printInt</identifier>
@@ -128,14 +128,14 @@
     <identifier>length</identifier>
     <symbol>)</symbol>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>do</keyword>
     <identifier>Output</identifier>
     <symbol>.</symbol>
     <identifier>println</identifier>
     <symbol>(</symbol>
     <symbol>)</symbol>
     <symbol>;</symbol>
-    <keyword>1</keyword>
+    <keyword>return</keyword>
     <symbol>;</symbol>
     <symbol>}</symbol>
     <symbol>}</symbol>
