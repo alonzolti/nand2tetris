@@ -16,12 +16,15 @@ end
 function CodeWriter:closeFile() self.outFile:close() end
 
 function CodeWriter:writeInit()
+    -- SP = 256
     self:aCommand('256')
     self:cCommand('D', 'A')
     self:compToReg(R_SP, 'D')
+    -- call Sys.init
     self:writeCall("Sys.init", 0)
 end
 
+--- the function writes an arithmetic command in hack
 function CodeWriter:writeArithmetic(command)
     if command == 'add' then
         self:binary('D+A')
@@ -44,6 +47,7 @@ function CodeWriter:writeArithmetic(command)
     end
 end
 
+--- the function writes push and pop command in hack
 function CodeWriter:writePushPop(cmd, seg, ind)
     if cmd == C_PUSH then
         self:push(seg, ind)
@@ -52,59 +56,143 @@ function CodeWriter:writePushPop(cmd, seg, ind)
     end
 end
 
+--- the function writeds push command in hack
+--- there are four differnt push commands:
+--- 1: constant
+--- 2: memory segment
+--- 3: TEMP or PTR
+--- 4: STATIC
+function CodeWriter:push(seg, index)
+    if self:isConstSeg(seg) then
+        self:valToStack(tostring(index))
+    elseif self:isMemSeg(seg) then
+        self:memToStack(self:asmMemSeg(seg), index)
+    elseif self:isRegSeg(seg) then
+        self:regToStack(seg, index)
+    elseif self:isStaticSeg(seg) then
+        self:staticToStack(index)
+    end
+    self:incSp()
+end
+
+--- the fucntion wrties pop command in hack
+--- there are three differnt push commands:
+--- 1: memory segment
+--- 2: TEMP or PTR
+--- 3: STATIC
+function CodeWriter:pop(seg, index)
+    self:decSp()
+    if self:isMemSeg(seg) then
+        self:stackToMem(self:asmMemSeg(seg), index)
+    elseif self:isRegSeg(seg) then
+        self:stackToReg(seg, index)
+    elseif self:isStaticSeg(seg) then
+        self:stackToStatic(index)
+    end
+end
+
+--- the function write a label in hack
 function CodeWriter:writeLabel(label)
     self:lCommand(label)
 end
 
+--- the function write the command GoTo in hack
 function CodeWriter:writeGoto(label)
+    -- A = label
     self:aCommand(label)
+    -- 0;JMP
     self:cCommand(nil, '0', 'JMP')
 end
 
+--- the function write the command if-goto in hack
 function CodeWriter:writeIf(label)
+    -- D = *SP
     self:popToDest('D')
+    -- A = label
     self:aCommand(label)
+    -- D;JNE
     self:cCommand(nil, 'D', 'JNE')
 end
 
+--- the function write the command call in hack
+--- to implement this command in hack, there are four steps:
+--- 1. create a new label for the return address
+--- 2. push the memory segments into the stack
+--- 3. move the ARG pointer to the start of the argument
+--- 4. move the LCL pointer to the start of the stack
+--- 5. jump to the fucntion that was called
+--- 6. write a label of the return address
 function CodeWriter:writeCall(funcName, numArgs)
+    -- push retAdd
     local retAdd = self:newLabel()
     self:push(S_CONST, retAdd)
+    -- push LCL
     self:push(S_REG, R_LCL)
+    -- push ARG
     self:push(S_REG, R_ARG)
+    -- push THIS
     self:push(S_REG, R_THIS)
+    -- push THAT
     self:push(S_REG, R_THAT)
-    self:loadSpOffset(-numArgs - 5)
+    -- ARG = SP - numArgs - 5
+    self:loadSeg(self:asmReg(R_SP), -numArgs - 5)
     self:compToReg(R_ARG, 'D')
+    -- LCL = SP
     self:regToReg(R_LCL, R_SP)
+    -- A = funcName
     self:aCommand(funcName)
+    -- 0;JMP
     self:cCommand(nil, '0', 'JMP')
+    -- (retAdd)
     self:lCommand(retAdd)
 end
 
+--- the function write the return command in hack
+--- to implement this command, there are a few steps:
+--- 1.
 function CodeWriter:writeReturn()
+    -- R_FRAME = R_LCL
     self:regToReg(R_FRAME, R_LCL)
+    -- A = 5
     self:aCommand('5')
+    -- A = FRAME - 5
     self:cCommand('A', 'D-A')
+    -- D = M
     self:cCommand('D', 'M')
+    -- RET = *(FRAME - 5)
     self:compToReg(R_RET, 'D')
+    -- *ARG = return value
     self:pop(S_ARG, 0)
+    -- D = ARG
     self:regToDest('D', R_ARG)
+    -- SP = ARG + 1
     self:compToReg(R_SP, 'D+1')
+    -- THAT=*(FRAME-1)
     self:prevFrameToReg(R_THAT)
+    -- THIS=*(FRAME-2)
     self:prevFrameToReg(R_THIS)
+    -- ARG=*(FRAME-3)
     self:prevFrameToReg(R_ARG)
+    -- LCL=*(FRAME-4)
     self:prevFrameToReg(R_LCL)
+    -- A = retAdd
     self:regToDest('A', R_RET)
+    -- goto retAdd
     self:cCommand(nil, '0', 'JMP')
 end
 
 function CodeWriter:prevFrameToReg(reg)
+    -- D = FRAME
     self:regToDest('D', R_FRAME)
+    -- D = FRAME - 1
     self:cCommand('D', 'D-1')
+    -- FRAME = FRAME - 1
     self:compToReg(R_FRAME, 'D')
+    -- A = FRAME - 1
     self:cCommand('A', 'D')
+    -- D = *(FRAME - 1)
     self:cCommand('D', 'M')
+    -- reg = D
     self:compToReg(reg, 'D')
 end
 
@@ -115,35 +203,14 @@ function CodeWriter:writeFunction(funcName, numLocals)
     end
 end
 
-function CodeWriter:push(seg, index)
-    if self:isConstSeg(seg) then
-        self:valToStack(tostring(index))
-    elseif self:isMemSeg(seg) then
-        self:memToStack(self:asmMemSeg(seg), index, true)
-    elseif self:isRegSeg(seg) then
-        self:regToStack(seg, index)
-    elseif self:isStaticSeg(seg) then
-        self:staticToStack(seg, index)
-    end
-    self:incSp()
-end
-
-function CodeWriter:pop(seg, index)
-    self:decSp()
-    if self:isMemSeg(seg) then
-        self:stackToMem(self:asmMemSeg(seg), index, true)
-    elseif self:isRegSeg(seg) then
-        self:stackToReg(seg, index)
-    elseif self:isStaticSeg(seg) then
-        self:stackToStatic(seg, index)
-    end
-end
-
+--- the function does the following operation: dest = *(SP-1)
+--- which is the value in the top of the stack
 function CodeWriter:popToDest(dest)
     self:decSp()
     self:stackToDest(dest)
 end
 
+--- check if the segment is memory segment
 function CodeWriter:isMemSeg(seg)
     return seg == S_LCL or seg == S_ARG or seg == S_THIS or seg == S_THAT
 end
@@ -152,104 +219,132 @@ function CodeWriter:isRegSeg(seg)
     return seg == S_REG or seg == S_TEMP or seg == S_PTR
 end
 
+--- the function check if the segment is the Static segment
 function CodeWriter:isStaticSeg(seg)
     return seg == S_STATIC
 end
 
+--- the function check if the segment is the constant segment
 function CodeWriter:isConstSeg(seg)
     return seg == S_CONST
 end
 
 function CodeWriter:unary(comp)
-    self:decSp()
-    self:stackToDest('D')
+    self:popToDest('D')
     self:cCommand('D', comp)
     self:compToStack('D')
     self:incSp()
 end
 
 function CodeWriter:binary(comp)
-    self:decSp()
-    self:stackToDest('D')
-    self:decSp()
-    self:stackToDest('A')
+    self:popToDest('D')
+    self:popToDest('A')
     self:cCommand('D', comp)
     self:compToStack('D')
     self:incSp()
 end
 
 function CodeWriter:compare(jump)
-    self:decSp()
-    self:stackToDest('D')
-    self:decSp()
-    self:stackToDest('A')
+    self:popToDest('D')
+    self:popToDest('A')
+
     self:cCommand('D', 'A-D')
     local labelEq = self:jump('D', jump)
     self:compToStack('0')
-    local labelNe = self:jump('0', jump)
+    local labelNe = self:jump('0', 'JMP')
     self:lCommand(labelEq)
     self:compToStack('-1')
     self:lCommand(labelNe)
     self:incSp()
 end
 
+--- increase the stack pointer
 function CodeWriter:incSp()
+    -- A = SP
     self:aCommand('SP')
+    -- *SP = *SP + 1
     self:cCommand('M', 'M+1')
 end
 
+--- decrease the stack pointer
 function CodeWriter:decSp()
+    -- A = SP
     self:aCommand('SP')
+    -- *SP = *SP - 1
     self:cCommand('M', 'M-1')
 end
 
+--- load the stack pointer value
+--- which means A = *SP
 function CodeWriter:loadSp()
+    -- A = SP
     self:aCommand('SP')
+    -- A = M
     self:cCommand('A', 'M')
 end
 
+--- the function stores a value into the stack
 function CodeWriter:valToStack(val)
+    -- A = val
     self:aCommand(val)
+    -- D = A
     self:cCommand('D', 'A')
+    -- *SP = D
     self:compToStack('D')
 end
 
+-- the function stores a reg value into the stack
 function CodeWriter:regToStack(seg, index)
+    -- D = reg
     self:regToDest('D', self:regNum(seg, index))
+    -- *SP = D
     self:compToStack('D')
 end
 
-function CodeWriter:memToStack(seg, index, indir)
-    self:loadSeg(seg, index, indir)
+-- the function stores a value from a memory segment into the stack
+function CodeWriter:memToStack(seg, index)
+    -- A = seg + index
+    self:loadSeg(seg, index)
+    -- D = *(seg + index)
     self:cCommand('D', 'M')
+    -- *SP = *(seg + index)
     self:compToStack('D')
 end
 
-function CodeWriter:staticToStack(seg, index)
+-- the function stores a static value into the stack
+function CodeWriter:staticToStack(index)
+    -- A = staticName
     self:aCommand(self:staticName(index))
+    -- D = value
     self:cCommand('D', 'M')
+    -- *SP = value
     self:compToStack('D')
 end
 
+-- the function stores a comp into the stack
 function CodeWriter:compToStack(comp)
+    -- A = *SP
     self:loadSp()
+    -- *SP = comp
     self:cCommand('M', comp)
 end
 
+-- the function retrieve a value from the stack into a register
 function CodeWriter:stackToReg(seg, index)
+    
     self:stackToDest('D')
     self:compToReg(self:regNum(seg, index), 'D')
 end
 
-function CodeWriter:stackToMem(seg, index, indir)
-    self:loadSeg(seg, index, indir)
+function CodeWriter:stackToMem(seg, index)
+    self:loadSeg(seg, index)
     self:compToReg(R_COPY, 'D')
     self:stackToDest('D')
     self:regToDest('A', R_COPY)
     self:cCommand('M', 'D')
 end
 
-function CodeWriter:stackToStatic(seg, index)
+function CodeWriter:stackToStatic(index)
     self:stackToDest('D')
     self:aCommand(self:staticName(index))
     self:cCommand('M', 'D')
@@ -260,26 +355,23 @@ function CodeWriter:stackToDest(dest)
     self:cCommand(dest, 'M')
 end
 
-function CodeWriter:loadSpOffset(offset)
-    self:loadSeg(self:asmReg(R_SP), offset, true)
-end
-
-function CodeWriter:loadSeg(seg, index, indir)
-    if index == 0 then
-        self:loadSegNoIndex(seg, indir)
+--- load a segment + index into the A,D registers
+function CodeWriter:loadSeg(seg, index)
+    if tonumber(index) == 0 then
+        self:loadSegNoIndex(seg)
     else
-        self:loadSegIndex(seg, index, indir)
+        self:loadSegIndex(seg, index)
     end
 end
 
-function CodeWriter:loadSegNoIndex(seg, indir)
+--- load a segment + index into the A,D registers
+function CodeWriter:loadSegNoIndex(seg)
     self:aCommand(seg)
-    if indir then
-        self:indir('AD')
-    end
+    self:cCommand('AD', 'M')
 end
 
-function CodeWriter:loadSegIndex(seg, index, indir)
+--- load a segment + index into the A,D registers
+function CodeWriter:loadSegIndex(seg, index)
     local comp = 'D+A'
     if tonumber(index) < 0 then
         index = -index
@@ -288,7 +380,7 @@ function CodeWriter:loadSegIndex(seg, index, indir)
     self:aCommand(tostring(index))
     self:cCommand('D', 'A')
     self:aCommand(seg)
-    if indir then self:indir('A') end
+    self:cCommand('A', 'M')
     self:cCommand('AD', comp)
 end
 
@@ -307,10 +399,6 @@ function CodeWriter:regToReg(dest, src)
     self:compToReg(dest, 'D')
 end
 
-function CodeWriter:indir(dest)
-    self:cCommand(dest, 'M')
-end
-
 function CodeWriter:regNum(seg, index)
     return self:regBase(seg) + index
 end
@@ -325,10 +413,12 @@ function CodeWriter:regBase(seg)
     end
 end
 
+--- return the name of the static variable
 function CodeWriter:staticName(index)
     return self.vmFile .. '.' .. index
 end
 
+--- return the name of the segment in Hack
 function CodeWriter:asmMemSeg(seg)
     if seg == S_LCL then
         return 'LCL'
@@ -357,21 +447,30 @@ function CodeWriter:newLabel()
     return 'LABEL' .. self.labelNum
 end
 
+--- A command - load the value of address into the A register
 function CodeWriter:aCommand(address)
     self.outFile:write('@' .. address .. '\n')
+    --io.write('@' .. address .. '\n')
 end
 
+--- C command - load the comp into dest and jump into the A line if the condition(jump) is true
 function CodeWriter:cCommand(dest, comp, jump)
     if dest ~= nil then
         self.outFile:write(dest .. '=')
+        --io.write(dest .. '=')
     end
     self.outFile:write(comp)
+    --io.write(comp)
     if jump ~= nil then
+        --io.write(';'.. jump)
         self.outFile:write(';' .. jump)
     end
     self.outFile:write('\n')
+    --io.write('\n')
 end
 
+--- l command - write a label in hack. like this: (nameLabel)
 function CodeWriter:lCommand(label)
     self.outFile:write('(' .. label .. ')\n')
+    --io.write('(' .. label .. ')\n' )
 end

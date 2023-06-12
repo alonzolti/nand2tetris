@@ -1,56 +1,3 @@
-@256
-D=A
-@R0
-M=D
-@LABEL1
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-@R1
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
-@R2
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
-@R3
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
-@R4
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
-@5
-D=A
-@R0
-A=M
-AD=A-D
-@R2
-M=D
-@R0
-D=M
-@R1
-M=D
-@Sys.init
-0;JMP
-(LABEL1)
 @10
 D=A
 @SP
@@ -58,6 +5,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @SP
 M=M-1
 @0
@@ -73,6 +21,7 @@ D=M
 @R15
 A=M
 M=D
+
 @21
 D=A
 @SP
@@ -80,6 +29,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @22
 D=A
 @SP
@@ -87,6 +37,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @SP
 M=M-1
 @2
@@ -102,6 +53,7 @@ D=M
 @R15
 A=M
 M=D
+
 @SP
 M=M-1
 @1
@@ -117,6 +69,7 @@ D=M
 @R15
 A=M
 M=D
+
 @36
 D=A
 @SP
@@ -124,6 +77,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @SP
 M=M-1
 @6
@@ -139,6 +93,7 @@ D=M
 @R15
 A=M
 M=D
+
 @42
 D=A
 @SP
@@ -146,6 +101,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @45
 D=A
 @SP
@@ -153,6 +109,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @SP
 M=M-1
 @5
@@ -168,6 +125,7 @@ D=M
 @R15
 A=M
 M=D
+
 @SP
 M=M-1
 @2
@@ -183,6 +141,7 @@ D=M
 @R15
 A=M
 M=D
+
 @510
 D=A
 @SP
@@ -190,6 +149,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @SP
 M=M-1
 @SP
@@ -197,6 +157,7 @@ A=M
 D=M
 @R11
 M=D
+
 @0
 D=A
 @LCL
@@ -208,6 +169,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @5
 D=A
 @THAT
@@ -219,6 +181,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @SP
 M=M-1
 @SP
@@ -235,6 +198,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @1
 D=A
 @ARG
@@ -246,6 +210,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @SP
 M=M-1
 @SP
@@ -262,6 +227,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @6
 D=A
 @THIS
@@ -273,6 +239,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @6
 D=A
 @THIS
@@ -284,6 +251,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @SP
 M=M-1
 @SP
@@ -300,6 +268,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @SP
 M=M-1
 @SP
@@ -316,6 +285,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @R11
 D=M
 @SP
@@ -323,6 +293,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 @SP
 M=M-1
 @SP
@@ -339,3 +310,4 @@ A=M
 M=D
 @SP
 M=M+1
+

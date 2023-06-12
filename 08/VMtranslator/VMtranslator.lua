@@ -1,9 +1,11 @@
+arg[1] = '.\\08\\FunctionCalls\\FibonacciElement'
+arg[0] = '.\\08\\VMtranslator\\VMtranslator.lua'
 package.path = package.path .. ";" .. io.popen("cd"):read() .. arg[0]:sub(2, string.find(arg[0], '\\[^\\]*$')) .. "?.lua"
 require "CodeWriter"
 require "Parser"
 require "VMconstant"
 
---translate all vm files
+--- translate all vm files
 function TranslateAll(infiles, outFile)
     if infiles ~= nil then
         local codeWriter = CodeWriter:new(outFile)
@@ -29,6 +31,7 @@ end
 
 --generating asm code from vm
 function GenCode(parser, codeWriter)
+
     local cmd = parser:commandType()
     if cmd == C_ARITHMETIC then
         codeWriter:writeArithmetic(parser:argF())
@@ -50,10 +53,12 @@ function GenCode(parser, codeWriter)
 end
 
 function main()
+    
     if (arg[1] == nil or arg[2] ~= nil) then
         print("Wrong number of parameters")
         os.exit()
     end
+    
     local files = {}
     local fileOutPath
     -- if it is a file
