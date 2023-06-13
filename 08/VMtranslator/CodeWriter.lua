@@ -149,7 +149,11 @@ end
 
 --- the function write the return command in hack
 --- to implement this command, there are a few steps:
---- 1.
+--- we do step number 1 before 2, in case that there aren't any arguments, and we don't want to override the return address
+--- 1. save the return address in a register
+--- 2. save the return value in ARG[0]
+--- 3. recompute the memory segments before the calling to this function
+--- 4. jump to the return address
 function CodeWriter:writeReturn()
     -- R_FRAME = R_LCL
     self:regToReg(R_FRAME, R_LCL)
@@ -196,6 +200,10 @@ function CodeWriter:prevFrameToReg(reg)
     self:compToReg(reg, 'D')
 end
 
+--- the function write the function command in hack
+--- there are two steps to this command:
+--- 1. write the label of the function
+--- 2. push numLocals times 0 to have enough space to the local segment
 function CodeWriter:writeFunction(funcName, numLocals)
     self:lCommand(funcName)
     for i = 1, numLocals do
@@ -331,7 +339,6 @@ end
 
 -- the function retrieve a value from the stack into a register
 function CodeWriter:stackToReg(seg, index)
-    
     self:stackToDest('D')
     self:compToReg(self:regNum(seg, index), 'D')
 end
@@ -442,6 +449,7 @@ function CodeWriter:jump(comp, jump)
     return label
 end
 
+--- the function create a new label name
 function CodeWriter:newLabel()
     self.labelNum = self.labelNum + 1
     return 'LABEL' .. self.labelNum
