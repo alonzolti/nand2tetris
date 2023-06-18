@@ -5,8 +5,8 @@ function main()
     if (arg[1] == nil or arg[2] ~= nil) then
         error("Wrong number of parameters")
     else
-        for _, v in pairs(GetFiles(arg[1])) do
-            CompilationEngine:new(v)
+        for _, file in pairs(GetFiles(arg[1])) do
+            CompilationEngine:new(file)
         end
     end
 end

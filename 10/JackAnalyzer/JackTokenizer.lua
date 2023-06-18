@@ -9,7 +9,6 @@ function JackTokenizer:new(file)
     local tokenizer = {}
     setmetatable(tokenizer, JackTokenizer)
     self.__index = self
-    print(file)
     local cfile = io.open(file, 'r')
     if cfile == nil then
         return error("file" .. file .. " isn't exist\n")
@@ -118,20 +117,24 @@ function JackTokenizer:split(line)
                 help = false
             end
         end
+        --if the first char is a space
         if string.match(firstChar, "%s") and help then
             line = string.sub(line, 2)
             help = false
+        --if the first char is a number
         elseif string.match(firstChar, "%d+") and help then
             local num = string.match(line, "%d+")
             table.insert(ans, num)
             line = string.sub(line, num:len() + 1)
             help = false
+        --if the first char is "
         elseif firstChar == '"' and help == true then
             local nextQuote = string.find(line, '"', 2)
             local currentToken = string.sub(line, 1, nextQuote)
             table.insert(ans, currentToken)
             line = string.sub(line, nextQuote + 1)
             help = false
+        --if the first word is identifier
         elseif help == true and line ~= '' and line ~= nil then
             local start, finish = string.find(line, "[A-Za-z_][A-Za-z0-9_]*")
             if start ~= 1 then
