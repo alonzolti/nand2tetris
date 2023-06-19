@@ -52,11 +52,8 @@ M=D
 0;JMP
 (LABEL1)
 (Class1.set)
-@0
-D=A
 @ARG
-A=M
-AD=D+A
+AD=M
 D=M
 @SP
 A=M
@@ -255,11 +252,8 @@ M=D
 A=M
 0;JMP
 (Class2.set)
-@0
-D=A
 @ARG
-A=M
-AD=D+A
+AD=M
 D=M
 @SP
 A=M

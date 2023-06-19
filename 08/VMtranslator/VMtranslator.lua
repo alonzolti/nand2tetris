@@ -1,5 +1,3 @@
-arg[1] = '.\\08\\FunctionCalls\\FibonacciElement'
-arg[0] = '.\\08\\VMtranslator\\VMtranslator.lua'
 package.path = package.path .. ";" .. io.popen("cd"):read() .. arg[0]:sub(2, string.find(arg[0], '\\[^\\]*$')) .. "?.lua"
 require "CodeWriter"
 require "Parser"
