@@ -1,7 +1,7 @@
-require "11/JackAnalyzer/JackTokenizer"
-require "11/JackAnalyzer/JackConstant"
-require "11/JackAnalyzer/SymbolTable"
-require "11/JackAnalyzer/VMWriter"
+require "JackTokenizer"
+require "JackConstant"
+require "SymbolTable"
+require "VMWriter"
 CompilationEngine = {
     tokenizer = nil,
     vm = nil,
@@ -12,17 +12,17 @@ CompilationEngine = {
 }
 
 function CompilationEngine:new(file)
-    local t = {}
-    setmetatable(t, CompilationEngine)
+    local compiler = {}
+    setmetatable(compiler, CompilationEngine)
     self.__index = self
-    t.tokenizer = JackTokenizer:new(file)
-    t.labelNum = 0
-    t.symbols = SymbolTable:new()
-    t.vm = VMWriter:new()
-    t:openOut(file)
-    t:compileClass()
-    t:closeOut()
-    return t
+    compiler.tokenizer = JackTokenizer:new(file)
+    compiler.labelNum = 0
+    compiler.symbols = SymbolTable:new()
+    compiler.vm = VMWriter:new()
+    compiler:openOut(file)
+    compiler:compileClass()
+    compiler:closeOut()
+    return compiler
 end
 
 function CompilationEngine:vmFunctionName()
@@ -43,7 +43,7 @@ function CompilationEngine:advance() return self.tokenizer:advance() end
 function CompilationEngine:isToken(tok, val)
     local nextTok, nextVal = self.tokenizer:peek()
     return (val == nil and nextTok == tok) or
-               (tok == nextTok and val == nextVal)
+        (tok == nextTok and val == nextVal)
 end
 
 function CompilationEngine:openOut(file) self.vm:openOut(file) end
@@ -80,12 +80,12 @@ function CompilationEngine:compileClassName()
 end
 
 function CompilationEngine:isClassVarDec()
-    return self:isKeyWord({KW_STATIC, KW_FIELD})
+    return self:isKeyWord({ KW_STATIC, KW_FIELD })
 end
 
 function CompilationEngine:compileClassVarDec()
-    local tok, kwd = self:advance()
-    self:compileDec(kwd_to_kind[kwd])
+    local _, kwd = self:advance()
+    self:compileDec(KwdToKind[kwd])
 end
 
 function CompilationEngine:compileDec(kind)
@@ -101,11 +101,11 @@ function CompilationEngine:compileDec(kind)
 end
 
 function CompilationEngine:isType()
-    return self:isToken(T_ID) or self:isKeyWord({KW_INT, KW_CHAR, KW_BOOLEAN})
+    return self:isToken(T_ID) or self:isKeyWord({ KW_INT, KW_CHAR, KW_BOOLEAN })
 end
 
 function CompilationEngine:compileVoidOrType()
-    if self:isKeyWord({KW_VOID}) then
+    if self:isKeyWord({ KW_VOID }) then
         return self:advance()
     else
         return self:compileType()
@@ -125,11 +125,11 @@ function CompilationEngine:isVarName() return self:isToken(T_ID) end
 function CompilationEngine:compileVarName() return self:require(T_ID) end
 
 function CompilationEngine:isSubroutine()
-    return self:isKeyWord({KW_CONSTRUCTOR, KW_FUNCTION, KW_METHOD})
+    return self:isKeyWord({ KW_CONSTRUCTOR, KW_FUNCTION, KW_METHOD })
 end
 
 function CompilationEngine:compileSubroutine()
-    local tok, kwd = self:advance()
+    local _, kwd = self:advance()
     local _, type = self:compileVoidOrType()
     self:compileSubroutineName()
     self.symbols:startSubroutine()
@@ -184,18 +184,7 @@ function CompilationEngine:writeFuncDecl(kwd)
     end
 end
 
-function CompilationEngine:loadThisPtr(kwd)
-    if kwd == KW_METHOD then
-        self.vm:writePush(SE_ARG, 0)
-        self.vm:writePop(SE_POINTER, 0)
-    elseif kwd == KW_CONSTRUCTOR then
-        self.vm:writePush(SE_CONST, self.symbols:varCount(SK_FIELD))
-        self.vm:writeCall("Memory.alloc", 1)
-        self.vm:writePop(SE_POINTER, 0)
-    end
-end
-
-function CompilationEngine:isVarDec() return self:isKeyWord({KW_VAR}) end
+function CompilationEngine:isVarDec() return self:isKeyWord({ KW_VAR }) end
 
 function CompilationEngine:compileVarDec()
     self:require(T_KEYWORD, KW_VAR)
@@ -208,7 +197,7 @@ end
 
 function CompilationEngine:isStatement()
     return self:isDo() or self:isLet() or self:isIf() or self:isWhile() or
-               self:isReturn()
+        self:isReturn()
 end
 
 function CompilationEngine:compileStatment()
@@ -225,7 +214,7 @@ function CompilationEngine:compileStatment()
     end
 end
 
-function CompilationEngine:isDo() return self:isKeyWord({KW_DO}) end
+function CompilationEngine:isDo() return self:isKeyWord({ KW_DO }) end
 
 function CompilationEngine:compileDo()
     self:require(T_KEYWORD, KW_DO)
@@ -235,7 +224,7 @@ function CompilationEngine:compileDo()
     self:require(T_SYM, ';')
 end
 
-function CompilationEngine:isLet() return self:isKeyWord({KW_LET}) end
+function CompilationEngine:isLet() return self:isKeyWord({ KW_LET }) end
 
 function CompilationEngine:compileLet()
     self:require(T_KEYWORD, KW_LET)
@@ -249,7 +238,7 @@ function CompilationEngine:compileLet()
         self:popArrayElement()
     else
         self.vm:writePop(self:getSeg(self.symbols:kindOf(name)),
-                         self.symbols:indexOf(name))
+            self.symbols:indexOf(name))
     end
 end
 
@@ -269,7 +258,7 @@ end
 
 function CompilationEngine:compileBasePlusIndex(name)
     self.vm:writePush(self:getSeg(self.symbols:kindOf(name)),
-                      self.symbols:indexOf(name))
+        self.symbols:indexOf(name))
     self:advance()
     self:compileExpression()
     self:require(T_SYM, ']')
@@ -283,7 +272,7 @@ function CompilationEngine:popArrayElement()
     self.vm:writePop(SE_THAT, 0)
 end
 
-function CompilationEngine:isWhile() return self:isKeyWord({KW_WHILE}) end
+function CompilationEngine:isWhile() return self:isKeyWord({ KW_WHILE }) end
 
 function CompilationEngine:compileWhile()
     self:require(T_KEYWORD, KW_WHILE)
@@ -302,7 +291,7 @@ function CompilationEngine:compileWhile()
     self.vm:writeLabel(continueLabel)
 end
 
-function CompilationEngine:isReturn() return self:isKeyWord({KW_RETURN}) end
+function CompilationEngine:isReturn() return self:isKeyWord({ KW_RETURN }) end
 
 function CompilationEngine:compileReturn()
     self:require(T_KEYWORD, KW_RETURN)
@@ -315,7 +304,7 @@ function CompilationEngine:compileReturn()
     self.vm:writeReturn()
 end
 
-function CompilationEngine:isIf() return self:isKeyWord({KW_IF}) end
+function CompilationEngine:isIf() return self:isKeyWord({ KW_IF }) end
 
 function CompilationEngine:compileIf()
     self:require(T_KEYWORD, KW_IF)
@@ -331,7 +320,7 @@ function CompilationEngine:compileIf()
     self:require(T_SYM, '}')
     self.vm:writeGoto(endLabel)
     self.vm:writeLabel(elseLabel)
-    if self:isKeyWord({KW_ELSE}) then
+    if self:isKeyWord({ KW_ELSE }) then
         self:advance()
         self:require(T_SYM, '{')
         self:compileStatements()
@@ -349,7 +338,7 @@ end
 function CompilationEngine:compileExpression()
     self:compileTerm()
     while self:isOp() do
-        local tok, op = self:advance()
+        local _, op = self:advance()
         self:compileTerm()
         if op == '+' then
             op = 'add'
@@ -378,7 +367,7 @@ end
 
 function CompilationEngine:isTerm()
     return self:isConst() or self:isVarName() or self:isSym('(') or
-               self:isUnaryOp()
+        self:isUnaryOp()
 end
 
 function CompilationEngine:compileTerm()
@@ -404,7 +393,7 @@ function CompilationEngine:compileTerm()
             self:compileSubroutineCall(name)
         else
             self.vm:writePush(self:getSeg(self.symbols:kindOf(name)),
-                              self.symbols:indexOf(name))
+                self.symbols:indexOf(name))
         end
     end
 end
@@ -442,7 +431,7 @@ end
 
 function CompilationEngine:compileArraySubscript(name)
     self.vm:writePush(self:getSeg(self.symbols:kindOf(name)),
-                      self.symbols:indexOf(name))
+        self.symbols:indexOf(name))
     self:require(T_SYM, '[')
     self:compileExpression()
     self:require(T_SYM, ']')
@@ -465,7 +454,7 @@ function CompilationEngine:compileSubroutineCall(name)
         else
             numArgs = 1
             self.vm:writePush(self:getSeg(self.symbols:kindOf(objName)),
-                              self.symbols:indexOf(objName))
+                self.symbols:indexOf(objName))
             name = self.symbols:typeOf(objName) .. '.' .. name
         end
         self:require(T_SYM, '(')
@@ -479,21 +468,20 @@ function CompilationEngine:compileSubroutineCall(name)
         self:require(T_SYM, ')')
         self.vm:writeCall(self.curClass .. '.' .. name, numArgs)
     end
-
 end
 
 function CompilationEngine:isBuiltinType(type)
     return type == KW_INT or type == KW_CHAR or type == KW_BOOLEAN or type ==
-               KW_VOID
+        KW_VOID
 end
 
 function CompilationEngine:isConst()
     return self:isToken(T_NUM) or self:isToken(T_STR) or
-               self:isKeywordConstant()
+        self:isKeywordConstant()
 end
 
 function CompilationEngine:isKeywordConstant()
-    return self:isKeyWord({KW_TRUE, KW_FALSE, KW_NULL, KW_THIS})
+    return self:isKeyWord({ KW_TRUE, KW_FALSE, KW_NULL, KW_THIS })
 end
 
 function CompilationEngine:isUnaryOp() return self:isSym('-~') end

@@ -30,15 +30,15 @@ KW_FALSE = 'false'
 KW_NULL = 'null'
 KW_THIS = 'this'
 KW_NONE = ''
-
+-- list of all the keywords
 Keywords = {
     KW_CLASS, KW_METHOD, KW_FUNCTION, KW_CONSTRUCTOR, KW_INT, KW_BOOLEAN,
     KW_CHAR, KW_VOID, KW_VAR, KW_STATIC, KW_FIELD, KW_LET, KW_DO, KW_IF,
     KW_ELSE, KW_WHILE, KW_RETURN, KW_TRUE, KW_FALSE, KW_NULL, KW_THIS
 }
 
--- Symbols for token type T_SYM
-symbols = {
+-- list of all the symbols
+Symbols = {
     "{", "}", "(", ")", "[", "]", ".", ",", ";", "+", "-", "*", "/", "&", "|",
     "<", ">", "=", "~"
 }
@@ -51,37 +51,37 @@ SK_VAR = 4
 SK_NONE = 5
 
 -- Convert keywords to symbol kinds
-kwd_to_kind = {}
-kwd_to_kind[KW_STATIC] = SK_STATIC
-kwd_to_kind[KW_FIELD] = SK_FIELD
+KwdToKind = {}
+KwdToKind[KW_STATIC] = SK_STATIC
+KwdToKind[KW_FIELD] = SK_FIELD
 
 -- VM Writer Support
 
 --vm commands
 CMD_ADD = 1
 CMD_SUB = 2
-CMD_NEG=3
-CMD_EQ=4
-CMD_GT=5
-CMD_LT=6
-CMD_AND=7
-CMD_OR=8
-CMD_NOT=9
-vmCmds = {'add','sub','neg','eq','gt','lt','and','or','not'}
+CMD_NEG = 3
+CMD_EQ = 4
+CMD_GT = 5
+CMD_LT = 6
+CMD_AND = 7
+CMD_OR = 8
+CMD_NOT = 9
+VmCmds = { 'add', 'sub', 'neg', 'eq', 'gt', 'lt', 'and', 'or', 'not' }
 
---segments 
-SE_CONST=1
-SE_ARG=2
-SE_LOCAL=3
-SE_STATIC=4
-SE_THIS=5
-SE_THAT=6
-SE_POINTER=7
-SE_TEMP=8
-SE_NONE=9
-
-segments = {'constant','argument','local','static','this','that','pointer','temp'}
+--segments
+SE_CONST = 1
+SE_ARG = 2
+SE_LOCAL = 3
+SE_STATIC = 4
+SE_THIS = 5
+SE_THAT = 6
+SE_POINTER = 7
+SE_TEMP = 8
+SE_NONE = 9
+-- list of  the segments
+Segments = { 'constant', 'argument', 'local', 'static', 'this', 'that', 'pointer', 'temp' }
 
 -- Temporary registers
 TEMP_RETURN = 0 -- Use temp 0 for popping an unused return value
-TEMP_ARRAY = 1 -- Use temp 1 for temporarily saving value to assign to array
+TEMP_ARRAY = 1  -- Use temp 1 for temporarily saving value to assign to array
