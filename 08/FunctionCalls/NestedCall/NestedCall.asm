@@ -332,11 +332,8 @@ A=M
 D=M
 @R5
 M=D
-@0
-D=A
 @LCL
-A=M
-AD=D+A
+AD=M
 D=M
 @SP
 A=M
@@ -544,11 +541,8 @@ A=M
 D=M
 @R4
 M=D
-@0
-D=A
 @ARG
-A=M
-AD=D+A
+AD=M
 D=M
 @SP
 A=M

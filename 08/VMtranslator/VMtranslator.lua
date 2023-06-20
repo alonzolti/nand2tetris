@@ -29,7 +29,6 @@ end
 
 --generating asm code from vm
 function GenCode(parser, codeWriter)
-
     local cmd = parser:commandType()
     if cmd == C_ARITHMETIC then
         codeWriter:writeArithmetic(parser:argF())
@@ -51,19 +50,18 @@ function GenCode(parser, codeWriter)
 end
 
 function main()
-    
     if (arg[1] == nil or arg[2] ~= nil) then
         print("Wrong number of parameters")
         os.exit()
     end
-    
+
     local files = {}
     local fileOutPath
     -- if it is a file
     if string.match(arg[1], '.vm') then
         files = { arg[1] }
         fileOutPath = arg[1]:gsub('.vm', '.asm')
-    -- if it is a directory
+        -- if it is a directory
     else
         files = Scandir(arg[1])
         fileOutPath = arg[1] .. '/' .. arg[1]:sub(string.find(arg[1], '\\[^\\]*$') + 1) .. '.asm'
@@ -87,4 +85,5 @@ function Scandir(directory)
     pfile:close()
     return VMfiles
 end
+
 main()

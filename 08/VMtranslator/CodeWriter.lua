@@ -203,7 +203,7 @@ end
 --- the function write the function command in hack
 --- there are two steps to this command:
 --- 1. write the label of the function
---- 2. push numLocals times 0 to have enough space to the local segment
+--- 2. push numLocals times the number 0 to have enough space to the local segment
 function CodeWriter:writeFunction(funcName, numLocals)
     self:lCommand(funcName)
     for i = 1, numLocals do
@@ -255,7 +255,6 @@ end
 function CodeWriter:compare(jump)
     self:popToDest('D')
     self:popToDest('A')
-
     self:cCommand('D', 'A-D')
     local labelEq = self:jump('D', jump)
     self:compToStack('0')
