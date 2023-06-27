@@ -690,6 +690,6 @@ M=D
 @Class2.get
 0;JMP
 (LABEL5)
-(WHILE)
-@WHILE
+(Sys.vm.WHILE)
+@Sys.vm.WHILE
 0;JMP

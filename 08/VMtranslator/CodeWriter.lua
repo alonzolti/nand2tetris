@@ -93,11 +93,13 @@ end
 
 --- the function write a label in hack
 function CodeWriter:writeLabel(label)
+    label = self.vmFile.. '.' .. label
     self:lCommand(label)
 end
 
 --- the function write the command GoTo in hack
 function CodeWriter:writeGoto(label)
+    label = self.vmFile.. '.' .. label
     -- A = label
     self:aCommand(label)
     -- 0;JMP
@@ -106,6 +108,7 @@ end
 
 --- the function write the command if-goto in hack
 function CodeWriter:writeIf(label)
+    label = self.vmFile.. '.' .. label
     -- D = *SP
     self:popToDest('D')
     -- A = label

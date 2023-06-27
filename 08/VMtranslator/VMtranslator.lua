@@ -7,7 +7,7 @@ require "VMconstant"
 function TranslateAll(infiles, outFile)
     if infiles ~= nil then
         local codeWriter = CodeWriter:new(outFile)
-        codeWriter:writeInit()
+        --codeWriter:writeInit()
         for _, file in pairs(infiles) do
             if file:match(".vm") then
                 Translate(file, codeWriter)

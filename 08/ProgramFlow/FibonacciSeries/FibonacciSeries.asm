@@ -100,7 +100,7 @@ D=M
 @R15
 A=M
 M=D
-(MAIN_LOOP_START)
+(FibonacciSeries.vm.MAIN_LOOP_START)
 @ARG
 AD=M
 D=M
@@ -114,11 +114,11 @@ M=M-1
 @SP
 A=M
 D=M
-@COMPUTE_ELEMENT
+@FibonacciSeries.vm.COMPUTE_ELEMENT
 D;JNE
-@END_PROGRAM
+@FibonacciSeries.vm.END_PROGRAM
 0;JMP
-(COMPUTE_ELEMENT)
+(FibonacciSeries.vm.COMPUTE_ELEMENT)
 @THAT
 AD=M
 D=M
@@ -249,6 +249,6 @@ D=M
 @R15
 A=M
 M=D
-@MAIN_LOOP_START
+@FibonacciSeries.vm.MAIN_LOOP_START
 0;JMP
-(END_PROGRAM)
+(FibonacciSeries.vm.END_PROGRAM)

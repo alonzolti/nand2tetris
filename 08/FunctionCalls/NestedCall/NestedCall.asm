@@ -136,8 +136,8 @@ A=M
 D=M
 @R6
 M=D
-(LOOP)
-@LOOP
+(Sys.vm.LOOP)
+@Sys.vm.LOOP
 0;JMP
 (Sys.main)
 @0

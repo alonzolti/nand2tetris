@@ -97,11 +97,11 @@ M=M-1
 @SP
 A=M
 D=M
-@IF_TRUE
+@Main.vm.IF_TRUE
 D;JNE
-@IF_FALSE
+@Main.vm.IF_FALSE
 0;JMP
-(IF_TRUE)
+(Main.vm.IF_TRUE)
 @ARG
 AD=M
 D=M
@@ -174,7 +174,7 @@ M=D
 @R14
 A=M
 0;JMP
-(IF_FALSE)
+(Main.vm.IF_FALSE)
 @ARG
 AD=M
 D=M
@@ -472,6 +472,6 @@ M=D
 @Main.fibonacci
 0;JMP
 (LABEL6)
-(WHILE)
-@WHILE
+(Sys.vm.WHILE)
+@Sys.vm.WHILE
 0;JMP

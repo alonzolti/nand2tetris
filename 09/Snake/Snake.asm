@@ -499,7 +499,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_0
+@Random.vm.LABEL_0
 D;JNE
 @Random.vm.0
 D=M
@@ -728,7 +728,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_2
+@Random.vm.LABEL_2
 D;JNE
 @LCL
 AD=M
@@ -981,7 +981,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_4
+@Random.vm.LABEL_4
 D;JNE
 @LABEL13
 D=A
@@ -2527,7 +2527,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_0
+@RandSeed.vm.LABEL_0
 D;JNE
 @RandSeed.vm.0
 D=M
@@ -2621,7 +2621,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_2
+@RandSeed.vm.LABEL_2
 D;JNE
 @0
 D=A
@@ -3375,7 +3375,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_0
+@Snake.vm.LABEL_0
 D;JNE
 @1
 D=A
@@ -4136,7 +4136,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_2
+@Snake.vm.LABEL_2
 D;JNE
 @R3
 D=M
@@ -4550,7 +4550,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_4
+@Snake.vm.LABEL_4
 D;JNE
 @8
 D=A
@@ -5847,7 +5847,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_6
+@Snake.vm.LABEL_6
 D;JNE
 @2
 D=A
@@ -5908,7 +5908,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_8
+@Snake.vm.LABEL_8
 D;JNE
 @0
 D=A
@@ -6097,7 +6097,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_10
+@Snake.vm.LABEL_10
 D;JNE
 @2
 D=A
@@ -6208,7 +6208,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_12
+@Snake.vm.LABEL_12
 D;JNE
 @0
 D=A
@@ -6397,7 +6397,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_14
+@Snake.vm.LABEL_14
 D;JNE
 @1
 D=A
@@ -6458,7 +6458,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_16
+@Snake.vm.LABEL_16
 D;JNE
 @0
 D=A
@@ -6647,7 +6647,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_18
+@Snake.vm.LABEL_18
 D;JNE
 @1
 D=A
@@ -6758,7 +6758,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_20
+@Snake.vm.LABEL_20
 D;JNE
 @0
 D=A
@@ -6983,7 +6983,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_22
+@Snake.vm.LABEL_22
 D;JNE
 @0
 D=A
@@ -7291,7 +7291,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_24
+@Snake.vm.LABEL_24
 D;JNE
 @5
 D=A
@@ -9820,7 +9820,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_0
+@SnakeGame.vm.LABEL_0
 D;JNE
 @11
 D=A
@@ -9916,7 +9916,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_2
+@SnakeGame.vm.LABEL_2
 D;JNE
 @0
 D=A
@@ -9973,7 +9973,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_4
+@SnakeGame.vm.LABEL_4
 D;JNE
 @0
 D=A
@@ -10036,7 +10036,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_6
+@SnakeGame.vm.LABEL_6
 D;JNE
 @LABEL101
 D=A
@@ -10164,7 +10164,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_8
+@SnakeGame.vm.LABEL_8
 D;JNE
 @0
 D=A
@@ -10281,7 +10281,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_10
+@SnakeGame.vm.LABEL_10
 D;JNE
 @0
 D=A
@@ -10614,7 +10614,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_12
+@SnakeGame.vm.LABEL_12
 D;JNE
 @0
 D=A
@@ -10712,7 +10712,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_14
+@SnakeGame.vm.LABEL_14
 D;JNE
 @0
 D=A
@@ -10810,7 +10810,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_16
+@SnakeGame.vm.LABEL_16
 D;JNE
 @11
 D=A
@@ -10920,7 +10920,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_18
+@SnakeGame.vm.LABEL_18
 D;JNE
 @11
 D=A
@@ -11108,7 +11108,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_20
+@SnakeGame.vm.LABEL_20
 D;JNE
 @11
 D=A
@@ -11251,7 +11251,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_22
+@SnakeGame.vm.LABEL_22
 D;JNE
 @11
 D=A
@@ -11361,7 +11361,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_24
+@SnakeGame.vm.LABEL_24
 D;JNE
 @11
 D=A
@@ -11549,7 +11549,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_26
+@SnakeGame.vm.LABEL_26
 D;JNE
 @11
 D=A
@@ -11692,7 +11692,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_28
+@SnakeGame.vm.LABEL_28
 D;JNE
 @11
 D=A
@@ -11802,7 +11802,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_30
+@SnakeGame.vm.LABEL_30
 D;JNE
 @11
 D=A
@@ -11990,7 +11990,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_32
+@SnakeGame.vm.LABEL_32
 D;JNE
 @11
 D=A
@@ -12133,7 +12133,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_34
+@SnakeGame.vm.LABEL_34
 D;JNE
 @11
 D=A
@@ -12243,7 +12243,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_36
+@SnakeGame.vm.LABEL_36
 D;JNE
 @11
 D=A
@@ -12431,7 +12431,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_38
+@SnakeGame.vm.LABEL_38
 D;JNE
 @11
 D=A
@@ -12602,7 +12602,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_40
+@SnakeGame.vm.LABEL_40
 D;JNE
 @12
 D=A
@@ -12927,7 +12927,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_42
+@SnakeGame.vm.LABEL_42
 D;JNE
 @11
 D=A
@@ -13548,7 +13548,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_44
+@SnakeGame.vm.LABEL_44
 D;JNE
 @11
 D=A
@@ -14059,7 +14059,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_46
+@SnakeGame.vm.LABEL_46
 D;JNE
 @17
 D=A
@@ -15389,7 +15389,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_0
+@SnakeGrid.vm.LABEL_0
 D;JNE
 @23
 D=A
@@ -15795,7 +15795,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_2
+@SnakeGrid.vm.LABEL_2
 D;JNE
 @19
 D=A
@@ -16052,7 +16052,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_4
+@SnakeGrid.vm.LABEL_4
 D;JNE
 @0
 D=A
@@ -16810,7 +16810,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_6
+@SnakeGrid.vm.LABEL_6
 D;JNE
 @20
 D=A
@@ -16973,7 +16973,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_8
+@SnakeGrid.vm.LABEL_8
 D;JNE
 @2
 D=A
@@ -18464,7 +18464,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_10
+@SnakeGrid.vm.LABEL_10
 D;JNE
 @0
 D=A
@@ -18702,7 +18702,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_12
+@SnakeGrid.vm.LABEL_12
 D;JNE
 @2
 D=A
@@ -18767,7 +18767,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_14
+@SnakeGrid.vm.LABEL_14
 D;JNE
 @0
 D=A
@@ -23309,7 +23309,7 @@ M=M-1
 @SP
 A=M
 D=M
-@LABEL_16
+@SnakeGrid.vm.LABEL_16
 D;JNE
 @R3
 D=M
