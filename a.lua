@@ -1,31 +1,29 @@
-a = {}
-b = {}
-function a:new()
-    local B = {}
-    setmetatable(B, a)
-    self.__index = self
-    return B
+-- Meta class
+Shape = {area = 0}
+-- Base class method new
+function Shape:new (o,side)
+   o = o or {}
+   self.__index = self
+   setmetatable(o, self)
+   side = side or 0
+   self.area = side*side;
+   return o
 end
-function a:foo()
-    print("hello A")
+-- Base class method printArea
+function Shape:printArea ()
+   print("The area is ",self.area)
 end
-
-function b:new()
-    local A = {}
-    setmetatable(A,b)
-    self.__index = self
-    return A
+-- Creating an object
+myshape = Shape:new(nil,10)
+myshape:printArea()
+Square = Shape:new()
+-- Derived class method printArea
+function Square:printArea ()
+   print("The area of square is ",self.area)
 end
-
-function b:foo()
-    print("hello B")
+function Square:printArea1 ()
+   print("The area of square is ",self.area)
 end
-function c(d)
-    d:foo()
-end
-
-local a1 = a:new()
-local b1 = b:new()
-
-
-c(b1)
+-- Creating an object
+mysquare = Square:new(nil,10)
+mysquare:printArea()
